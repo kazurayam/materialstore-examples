@@ -1,0 +1,14 @@
+include::../attribute.adoc[]
+
+== What is the "materialstore" library
+
+The "materialstore" is a software libaray coded in Groovy language, usable for JVM languages (Java, Groovy, Kotlin).
+
+The "materialstore" has it source code hosted in GitHub at
+
+- https://github.com/kazurayam/materialstore
+
+The artifacts of "materialstore" are distributed in the Maven Central Repository at
+
+- https://mvnrepository.com/artifact/com.kazurayam/materialstore/
+

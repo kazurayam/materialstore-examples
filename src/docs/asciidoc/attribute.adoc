@@ -1,0 +1,31 @@
+:lang: ja
+:encoding: utf-8
+:doctype: book
+:toc-title: Table of contents
+:preface-title: Preface
+:appendix-caption: Appendix
+:caution-caption: Caution
+:example-caption: Example
+:figure-caption: Figure
+:important-caption: Important
+:last-update-label: Last update
+:listing-caption: Listing
+:manname-title: Man name
+:note-caption: Note
+:preface-title: Preface
+:table-caption: Table
+:tip-caption: Tip
+:toc-title: Table of content
+:untitled-label: Untitled
+:version-label: Version
+:warning-caption: Warning
+
+:experimental:
+:icons: font
+:sectnums:
+:chapter-label:
+:table-stripes: even
+
+ifndef::imagesdir[:imagesdir: ./images]
+ifndef::sourceidr[:sourcedir: ./src]
+ifndef::source-highlighter[:source-highlighter: highlighjs]

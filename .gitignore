@@ -1,0 +1,13 @@
+# macOSX
+.DS_Store
+
+# Gradle
+.gradle
+build/
+
+# IntelliJ IDEA
+.idea
+
+# assciidoctor downloads some resources from the net, those are large. should be gitignored
+src/docs/asciidoc/@font/
+src/docs/asciidoc/@style/

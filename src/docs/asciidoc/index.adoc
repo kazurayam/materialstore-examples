@@ -1,0 +1,11 @@
+include::./attribute.adoc[]
+
+= materialstore-by-example
+https://kazurayam.github.com/materials-by-example/
+2021-08-08
+:Revision: 0.1.0
+:toc: left
+
+// 章ごとにincludeしていく(画像のパスも上書きすること)
+:imagesdir: Chapter01/images
+include::Chapter01/index.adoc[]
