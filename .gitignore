@@ -8,6 +8,8 @@ build/
 # IntelliJ IDEA
 .idea
 
-# assciidoctor downloads some resources from the net, those are large. should be gitignored
+# assciidoctor downloads some resources from the Internet. Those files are large, so that they should be gitignored
 src/docs/asciidoc/@font/
-src/docs/asciidoc/@style/
+
+# temporary files
+tmp/
