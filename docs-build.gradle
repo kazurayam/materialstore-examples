@@ -1,6 +1,5 @@
 plugins {
     id 'org.asciidoctor.jvm.convert' version '3.1.0'
-    id 'org.asciidoctor.jvm.pdf' version '3.1.0'
     id 'org.asciidoctor.jvm.gems' version '3.1.0'
 }
 
@@ -10,8 +9,7 @@ repositories {
 }
 
 dependencies {
-    asciidoctorGems files('gradle/repos/gem/prawn_svg_font_patch-0.1.0.gem')
-    asciidoctorGems 'rubygems:asciidoctor-pdf-linewrap-ja:0.7.0'
+
 }
 
 asciidoctor {
@@ -22,25 +20,12 @@ asciidoctor {
     }
     resources {
         from('src/docs/asciidoc') {
-            include 'Chapter*/images/**/*'
+            include 'Chapter*/images/*'
         }
     }
     asciidoctorj {
-        attributes 'stylesdir': '@style',
-        'stylesheet': 'asciidoctor.css'
-    }
-}
-
-asciidoctorPdf {
-    dependsOn asciidoctorGemsPrepare
-    baseDir file('src/docs/asciidoc')
-    fontsDir file('src/docs/asciidoc/@font')
-    sources {
-        include 'index.adoc'
-    }
-    asciidoctorj {
-        attributes 'pdf-stylesdir': '@style',
-        'pdf-style': 'pdf'
+        attributes('stylesdir': '@style',
+                'stylesheet': 'asciidoctor.css')
     }
 }
 
@@ -48,34 +33,31 @@ asciidoctorj {
     modules {
         diagram.use()
         diagram.version '1.5.16'
-        pdf.version '1.5.3'
     }
     requires = [
-        'asciidoctor-diagram',
-        'asciidoctor-pdf-linewrap-ja',
-        'prawn_svg_font_patch'
+        'asciidoctor-diagram'
     ]
     attributes 'source-highlighter': 'coderay'
 }
 
 task cleanDocs(type: Delete) {
-    delete 'docs/asciidoc'
+    delete fileTree('docs/asciidoc/') {
+        include '**/*'
+    }
 }
 
 task docs(dependsOn: [
         cleanDocs,
-        asciidoctor,
-        asciidoctorPdf
+        asciidoctor
 ]) doLast {
     copy {
         from 'build/docs/asciidoc/index.html'
-        from 'build/docs/asciidocPdf/index.pdf'
         into 'docs/asciidoc'
     }
     copy {
         from 'src/docs/asciidoc/'
+        include 'Chapter*/images/*'
         into 'docs/asciidoc'
     }
 }
 tasks.getByPath("asciidoctor").mustRunAfter("cleanDocs")
-tasks.getByPath("asciidoctorPdf").mustRunAfter("cleanDocs")

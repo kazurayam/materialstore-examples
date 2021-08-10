@@ -1,24 +1,24 @@
 :lang: ja
 :encoding: utf-8
 :doctype: book
-:toc-title: Table of contents
-:preface-title: Preface
-:appendix-caption: Appendix
-:caution-caption: Caution
-:example-caption: Example
-:figure-caption: Figure
-:important-caption: Important
-:last-update-label: Last update
-:listing-caption: Listing
-:manname-title: Man name
-:note-caption: Note
-:preface-title: Preface
-:table-caption: Table
-:tip-caption: Tip
-:toc-title: Table of content
-:untitled-label: Untitled
-:version-label: Version
-:warning-caption: Warning
+:toc-title: 目次
+:preface-title: はじめに
+:appendix-caption: 付録
+:caution-caption: 注意
+:example-caption: 例
+:figure-caption: 図
+:important-caption: 重要
+:last-update-label: 最終更新
+:listing-caption: リスト
+:manname-title: 名前
+:note-caption: 注記
+:preface-title: まえがき
+:table-caption: 表
+:tip-caption: ヒント
+:toc-title: 目次
+:untitled-label: 無題
+:version-label: バージョン
+:warning-caption: 警告
 
 :experimental:
 :icons: font
@@ -27,5 +27,5 @@
 :table-stripes: even
 
 ifndef::imagesdir[:imagesdir: ./images]
-ifndef::sourceidr[:sourcedir: ./src]
-ifndef::source-highlighter[:source-highlighter: highlighjs]
+ifndef::sourcedir[:sourcedir: ./src]
+ifndef::source-highlighter[:source-highlighter: highlightjs]

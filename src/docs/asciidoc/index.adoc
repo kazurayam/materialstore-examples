@@ -1,11 +1,11 @@
 include::./attribute.adoc[]
 
-= materialstore-by-example
-https://kazurayam.github.com/materials-by-example/
-2021-08-08
-:Revision: 0.1.0
+= AsciidoctorとGradleでつくる文書執筆環境
+https://github.com/h1romas4/asciidoctor-gradle-template
+2020-04-07
+:Revision: 2.0.0
 :toc: left
 
-// 章ごとにincludeしていく(画像のパスも上書きすること)
+// 章ごとにインクルードしていく（画像パスも上書きすること）
 :imagesdir: Chapter01/images
 include::Chapter01/index.adoc[]
