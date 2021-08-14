@@ -41,8 +41,9 @@ asciidoctorj {
 }
 
 task cleanDocs(type: Delete) {
-    delete fileTree('docs/asciidoc/') {
-        include '**/*'
+    delete fileTree('docs/') {
+        include 'index.html'
+        include 'Chapter*/**/*'
     }
 }
 
@@ -57,7 +58,7 @@ task docs(dependsOn: [
     copy {
         from 'src/docs/asciidoc/'
         include 'Chapter*/images/*'
-        into 'docs/asciidoc'
+        into 'docs/'
     }
 }
 tasks.getByPath("asciidoctor").mustRunAfter("cleanDocs")
