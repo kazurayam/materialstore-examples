@@ -1,20 +1,26 @@
+# materialstore-examples
 
+## Overview
 
-# How I authored the doc
+This project publishes a documentation of the [`materialstore`](https://github.com/kazurayam/materialstore) library with examples. Examples are written in Java >ver8. Examples uses [Gradle](https://gradle.org/) and [JUnit5](https://junit.org/junit5/).
 
-I studied the following article to learn how to author the document using Asciidoc with Gradle.
+## URL of documentation
+
+- https://kazurayam.github.com/materialstore-example/
+
+## How to publish the doc
+
+In the command line, execute the following command
+
+```
+$ cd $materialstore-examples
+$ gradle -b docs-build.gradle
+```
+
+then do `git add`, `git commit`, and `git publish`.
+
+## How I authored the doc
+
+I used [Asciidoc](https://asciidoc.org/) to author the doc. I studied the following article to learn how to author the document using Asciidoc with Gradle.
 
 - [AsciidoctorとGradleでつくる文書執筆環境](https://h1romas4.github.io/asciidoctor-gradle-template/index.html)
-
-This articles provides a good sample project to get started with Asciidoctor. But the sample project
-has a problem : it contains 3 sets of Fonts, which has 240 MB size. It is too large to include in source code project. So, I decided to write in the `.gitignore` file:
-
-```
-src/docs/asciidoc/@font/
-```
-
-And I will manually download the Fonts from:
-- https://ja.osdn.net/downloads/users/8/8579/genshingothic-20150607.zip
-- https://github.com/ButTaiwan/genyo-font/releases/download/v1.501/GenYoMin.zip
-- https://github.com/edihbrandon/RictyDiminished/archive/refs/tags/3.2.3.zip
-- 

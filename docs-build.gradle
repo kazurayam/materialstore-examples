@@ -8,10 +8,6 @@ repositories {
     ruby.gems()
 }
 
-dependencies {
-
-}
-
 asciidoctor {
     dependsOn asciidoctorGemsPrepare
     baseDir file('src/docs/asciidoc')
@@ -46,6 +42,8 @@ task cleanDocs(type: Delete) {
         include 'Chapter*/**/*'
     }
 }
+
+defaultTasks 'clean', 'docs'
 
 task docs(dependsOn: [
         cleanDocs,
