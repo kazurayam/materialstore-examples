@@ -1,7 +1,7 @@
 :lang: ja
 :encoding: utf-8
 :doctype: book
-:toc-title: 目次
+:toc-title: Table of Content
 :preface-title: はじめに
 :appendix-caption: 付録
 :caution-caption: 注意
