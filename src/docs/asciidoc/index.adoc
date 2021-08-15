@@ -1,7 +1,7 @@
 include::./attribute.adoc[]
 
 = materialstore by examples
-https://kazurayam.github.io/materialstore-examples/
+https://github.com/kazurayam/materialstore
 2021-08-15
 :Revision: 0.1.0
 :toc: left

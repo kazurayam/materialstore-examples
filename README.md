@@ -6,7 +6,7 @@ This project publishes a documentation of the [`materialstore`](https://github.c
 
 ## URL of documentation
 
-- https://kazurayam.github.com/materialstore-example/
+- https://kazurayam.github.io/materialstore-examples/
 
 ## How to publish the doc
 
