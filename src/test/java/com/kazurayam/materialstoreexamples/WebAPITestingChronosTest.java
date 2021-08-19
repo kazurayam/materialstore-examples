@@ -1,4 +1,4 @@
-package com.kazurayam.materialstorebyexample;
+package com.kazurayam.materialstoreexamples;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -31,7 +31,7 @@ import java.util.Map;
 class WebAPITestingChronosTest {
 
     private static Path root = Paths.get("./build/tmp/testOutput/"
-            + WebAPITestingChronosTest.class.getSimpleName() + "/Materials");
+            + WebAPITestingChronosTest.class.getSimpleName() + "/store");
 
     private static Store store;
 

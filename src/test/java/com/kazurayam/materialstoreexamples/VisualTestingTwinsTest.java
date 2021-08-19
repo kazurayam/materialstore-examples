@@ -1,4 +1,4 @@
-package com.kazurayam.materialstorebyexample;
+package com.kazurayam.materialstoreexamples;
 
 import com.google.common.collect.ImmutableMap;
 import com.kazurayam.materialstore.DiffArtifacts;
@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -48,7 +47,7 @@ class VisualTestingTwinsTest {
 
     private static final Path root = Paths.get("./build/tmp/testOutput/"
             + VisualTestingTwinsTest.class.getSimpleName()
-            + "/Materials");
+            + "/store");
 
     private static Store store;
     private JobName jobName;

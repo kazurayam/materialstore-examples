@@ -1,4 +1,4 @@
-package com.kazurayam.materialstorebyexample;
+package com.kazurayam.materialstoreexamples;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -43,7 +43,7 @@ public class OpenWeatherMapClientTest {
     private static final Path materials =
             Paths.get("./build/tmp/testOutput/"
                     + OpenWeatherMapClientTest.class.getSimpleName()
-                    + "/Materials");
+                    + "/store");
 
     private OpenWeatherMapClient client;
 

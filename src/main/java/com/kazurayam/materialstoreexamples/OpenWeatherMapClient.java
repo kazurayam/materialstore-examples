@@ -1,4 +1,4 @@
-package com.kazurayam.materialstorebyexample;
+package com.kazurayam.materialstoreexamples;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.http.NameValuePair;

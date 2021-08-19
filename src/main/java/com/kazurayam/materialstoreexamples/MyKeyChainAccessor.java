@@ -1,4 +1,4 @@
-package com.kazurayam.materialstorebyexample;
+package com.kazurayam.materialstoreexamples;
 
 import com.kazurayam.subprocessj.Subprocess;
 

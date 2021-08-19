@@ -1,16 +1,12 @@
-package com.kazurayam.materialstorebyexample.case0;
+package com.kazurayam.materialstoreexamples.case0;
 
 import com.google.common.collect.ImmutableMap;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
