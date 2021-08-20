@@ -5,9 +5,12 @@ import com.kazurayam.materialstore.JobTimestamp;
 import com.kazurayam.materialstore.Store;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.File;
@@ -52,5 +55,17 @@ public class TestUtils {
         Path index = store.getRoot().resolve(jobName.toString())
                 .resolve(jobTimestamp.toString()).resolve("index");
         Files.copy(index, outFile);
+    }
+
+    static byte[] downloadWebResourceAsByteArray(URL url) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (InputStream inputStream = url.openStream()) {
+            int n = 0;
+            byte [] buffer = new byte[ 1024 ];
+            while (-1 != (n = inputStream.read(buffer))) {
+                output.write(buffer, 0, n);
+            }
+        }
+        return output.toByteArray();
     }
 }

@@ -3,8 +3,10 @@ package com.kazurayam.materialstoreexamples;
 import com.kazurayam.materialstore.FileType;
 import com.kazurayam.materialstore.JobName;
 import com.kazurayam.materialstore.JobTimestamp;
+import com.kazurayam.materialstore.Material;
 import com.kazurayam.materialstore.Metadata;
 import com.kazurayam.materialstore.MetadataImpl;
+import com.kazurayam.materialstore.MetadataPattern;
 import com.kazurayam.materialstore.Store;
 import com.kazurayam.materialstore.Stores;
 import com.kazurayam.subprocessj.Subprocess;
@@ -20,11 +22,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 
-public class Ex01StoringStrings {
+public class Ex01StoringStringsTest {
 
     private static final String className =
-            Ex01StoringStrings.class.getSimpleName();
+            Ex01StoringStringsTest.class.getSimpleName();
 
     private static final Path root =
             Paths.get("./build/tmp/testOutput/" + className + "/store");
@@ -88,6 +91,9 @@ public class Ex01StoringStrings {
 
     @AfterAll
     public static void afterAll() throws IOException, InterruptedException {
+        List<Material> materialList = store.select(jobName, jobTimestamp, MetadataPattern.ANY);
+        store.reportMaterials(jobName, materialList, "list.html");
+        //
         Subprocess subprocess = new Subprocess();
         subprocess.cwd(new File(root.toString()));
         Subprocess.CompletedProcess cp = subprocess.run(Arrays.asList("tree", "."));

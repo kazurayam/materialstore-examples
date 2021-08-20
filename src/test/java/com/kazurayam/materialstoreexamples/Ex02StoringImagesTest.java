@@ -3,8 +3,10 @@ package com.kazurayam.materialstoreexamples;
 import com.kazurayam.materialstore.FileType;
 import com.kazurayam.materialstore.JobName;
 import com.kazurayam.materialstore.JobTimestamp;
+import com.kazurayam.materialstore.Material;
 import com.kazurayam.materialstore.Metadata;
 import com.kazurayam.materialstore.MetadataImpl;
+import com.kazurayam.materialstore.MetadataPattern;
 import com.kazurayam.materialstore.Store;
 import com.kazurayam.materialstore.Stores;
 import com.kazurayam.subprocessj.Subprocess;
@@ -22,11 +24,12 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 
-public class Ex02StoringImages {
+public class Ex02StoringImagesTest {
 
     private static final String className =
-            Ex01StoringStrings.class.getSimpleName();
+            Ex02StoringImagesTest.class.getSimpleName();
 
     private static final Path root =
             Paths.get("./build/tmp/testOutput/" + className + "/store");
@@ -47,24 +50,18 @@ public class Ex02StoringImages {
     public void beforeEach() {}
 
     @Test
-    public void test_storing_a_photo() throws Exception {
-        URL url = new URL("https://photo53.com/img/fushimiinari27.jpg");
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try (InputStream inputStream = url.openStream()) {
-            int n = 0;
-            byte [] buffer = new byte[ 1024 ];
-            while (-1 != (n = inputStream.read(buffer))) {
-                output.write(buffer, 0, n);
-            }
-        }
-        byte[] bytes = output.toByteArray();
-
+    public void test_downloading_a_photo_from_web() throws Exception {
+        URL url = new URL("https://kazurayam.github.io/materialstore-examples/Chapter01/images/umineko-1960x1960.jpg");
+        byte[] bytes = TestUtils.downloadWebResourceAsByteArray(url);
         Metadata metadata = new MetadataImpl.Builder(url)
-                .put("location", "京都 伏見稲荷")
-                .put("title", "千本鳥居")
+                .put("location", "Hachinohe,Aomori prefecture,Japan")
+                .put("venue", "Kabushima")
+                .put("title", "Umineko, a sea bird")
+                .put("土地", "八戸市")
+                .put("場所", "蕪島")
+                .put("タイトル", "うみねこ")
                 .build();
-
-        store.write(jobName, jobTimestamp, FileType.TXT, metadata, bytes);
+        store.write(jobName, jobTimestamp, FileType.JPEG, metadata, bytes);
     }
 
     @AfterEach
@@ -72,6 +69,9 @@ public class Ex02StoringImages {
 
     @AfterAll
     public static void afterAll() throws IOException, InterruptedException {
+        List<Material> materialList = store.select(jobName, jobTimestamp, MetadataPattern.ANY);
+        store.reportMaterials(jobName, materialList, "list.html");
+        //
         Subprocess subprocess = new Subprocess();
         subprocess.cwd(new File(root.toString()));
         Subprocess.CompletedProcess cp = subprocess.run(Arrays.asList("tree", "."));
