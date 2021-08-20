@@ -77,7 +77,7 @@ class VisualTestingTwinsTest {
         jobTimestamp = JobTimestamp.now();
 
         // open the Chrome browser
-        WebDriver driver = createChromeDriver();
+        WebDriver driver = TestUtils.createChromeDriver();
 
         // visit the 1st page to take screenshot and save HTML source
         String profile1 = "ProductionEnv";
@@ -225,21 +225,7 @@ class VisualTestingTwinsTest {
         }
     }
 
-    /**
-     * Opens a headless Chrome Browser
-     * @return WebDriver
-     */
-    static WebDriver createChromeDriver() {
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
-        WebDriver driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(120, TimeUnit.MILLISECONDS);
-        driver.manage().window().setSize(new Dimension(800, 800));
-        return driver;
-    }
+
 
     /**
      * return tidy HTML String using jsoup

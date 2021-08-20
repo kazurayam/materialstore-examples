@@ -38,11 +38,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Runs that class to obtain a JSON text.
  * Stores the JSON text into local disk using com.kazurayam.materialstore.Store API.
  */
-public class OpenWeatherMapClientTest {
+public class OpenWeatherMapAPIClientTest {
 
     private static final Path materials =
             Paths.get("./build/tmp/testOutput/"
-                    + OpenWeatherMapClientTest.class.getSimpleName()
+                    + OpenWeatherMapAPIClientTest.class.getSimpleName()
                     + "/store");
 
     private OpenWeatherMapClient client;
