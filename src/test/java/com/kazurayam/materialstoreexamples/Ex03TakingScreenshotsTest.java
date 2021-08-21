@@ -6,6 +6,7 @@ import com.kazurayam.materialstore.FileType;
 import com.kazurayam.materialstore.JobName;
 import com.kazurayam.materialstore.JobTimestamp;
 import com.kazurayam.materialstore.Material;
+import com.kazurayam.materialstore.MaterialList;
 import com.kazurayam.materialstore.Metadata;
 import com.kazurayam.materialstore.MetadataImpl;
 import com.kazurayam.materialstore.MetadataPattern;
@@ -133,11 +134,11 @@ public class Ex03TakingScreenshotsTest {
         driver.quit();
 
         // list all of 4 cities
-        List<Material> materialList = store.select(jobName, jobTimestamp, MetadataPattern.ANY);
+        MaterialList materialList = store.select(jobName, jobTimestamp, MetadataPattern.ANY);
         store.reportMaterials(jobName, materialList, "fullList.html");
 
         // list 2 cities of which name stats with "To"
-        List<Material> selected = store.select(jobName, jobTimestamp,
+        MaterialList selected = store.select(jobName, jobTimestamp,
                 MetadataPattern.builder().put("city", Pattern.compile("To.*")).build());
         store.reportMaterials(jobName, selected, "selected.html");
 

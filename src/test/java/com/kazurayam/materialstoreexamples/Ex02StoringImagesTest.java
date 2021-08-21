@@ -3,9 +3,8 @@ package com.kazurayam.materialstoreexamples;
 import com.kazurayam.materialstore.FileType;
 import com.kazurayam.materialstore.JobName;
 import com.kazurayam.materialstore.JobTimestamp;
-import com.kazurayam.materialstore.Material;
+import com.kazurayam.materialstore.MaterialList;
 import com.kazurayam.materialstore.Metadata;
-import com.kazurayam.materialstore.MetadataImpl;
 import com.kazurayam.materialstore.MetadataPattern;
 import com.kazurayam.materialstore.Store;
 import com.kazurayam.materialstore.Stores;
@@ -67,7 +66,7 @@ public class Ex02StoringImagesTest {
 
     @AfterAll
     public static void afterAll() throws IOException, InterruptedException {
-        List<Material> materialList = store.select(jobName, jobTimestamp, MetadataPattern.ANY);
+        MaterialList materialList = store.select(jobName, jobTimestamp, MetadataPattern.ANY);
         store.reportMaterials(jobName, materialList, "list.html");
         //
         Subprocess subprocess = new Subprocess();

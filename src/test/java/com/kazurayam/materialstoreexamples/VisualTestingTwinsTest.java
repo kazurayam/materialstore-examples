@@ -6,6 +6,7 @@ import com.kazurayam.materialstore.FileType;
 import com.kazurayam.materialstore.JobName;
 import com.kazurayam.materialstore.JobTimestamp;
 import com.kazurayam.materialstore.Material;
+import com.kazurayam.materialstore.MaterialList;
 import com.kazurayam.materialstore.Metadata;
 import com.kazurayam.materialstore.MetadataIgnoredKeys;
 import com.kazurayam.materialstore.MetadataImpl;
@@ -104,10 +105,11 @@ class VisualTestingTwinsTest {
         driver.quit();
 
         // pickup the materials that belong to each "profiles"
-        List<Material> left = store.select(jobName, jobTimestamp,
+        MaterialList left = store.select(jobName, jobTimestamp,
                 MetadataPattern.builderWithMap(ImmutableMap.of("profile", profile1)).build()
         );
-        List<Material> right = store.select(jobName, jobTimestamp,
+
+        MaterialList right = store.select(jobName, jobTimestamp,
                 MetadataPattern.builderWithMap(ImmutableMap.of("profile", profile2)).build()
         );
 

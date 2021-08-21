@@ -10,6 +10,7 @@ import com.kazurayam.materialstore.FileType;
 import com.kazurayam.materialstore.JobName;
 import com.kazurayam.materialstore.JobTimestamp;
 import com.kazurayam.materialstore.Material;
+import com.kazurayam.materialstore.MaterialList;
 import com.kazurayam.materialstore.MaterialstoreException;
 import com.kazurayam.materialstore.Metadata;
 import com.kazurayam.materialstore.MetadataPattern;
@@ -70,11 +71,11 @@ class WebAPITestingChronosTest {
             throw new MaterialstoreException(
                     "JobTimestamp prior to ${baseTimestamp} is not found. We will quit.");
         }
-        List<Material> previousData =
+        MaterialList previousData =
                 store.select(jobName, previousTimestamp, MetadataPattern.ANY);
 
         // retrieve the current weather data of the target city
-        List<Material> currentData  =
+        MaterialList currentData  =
                 store.select(jobName, currentTimestamp, MetadataPattern.ANY);
 
         // make diff

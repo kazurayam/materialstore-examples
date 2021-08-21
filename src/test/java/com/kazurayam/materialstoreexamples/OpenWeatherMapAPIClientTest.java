@@ -10,6 +10,7 @@ import com.kazurayam.materialstore.FileType;
 import com.kazurayam.materialstore.JobName;
 import com.kazurayam.materialstore.JobTimestamp;
 import com.kazurayam.materialstore.Material;
+import com.kazurayam.materialstore.MaterialList;
 import com.kazurayam.materialstore.Metadata;
 import com.kazurayam.materialstore.MetadataImpl;
 import com.kazurayam.materialstore.MetadataPattern;
@@ -120,7 +121,7 @@ public class OpenWeatherMapAPIClientTest {
     @AfterAll
     public static void afterAll() {
         // retrieve the JSON file from the Material directory
-        List<Material> materials = store.select(jobName, jobTimestamp,
+        MaterialList materials = store.select(jobName, jobTimestamp,
                 MetadataPattern.ANY, FileType.JSON);
         // make a html report
         MaterialsBasicReporter reporter = new MaterialsBasicReporter(

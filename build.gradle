@@ -15,10 +15,11 @@ ext {
     jsoupVersion = '1.7.2'
     slf4jsimpleVersion = '1.7.32'
     junitjupiterVersion = '5.7.0'
-    materialstoreVersion = '0.1.2-SNAPSHOT'
+    materialstoreVersion = '0.1.3-SNAPSHOT'
     ashotwrapperVersion = '0.1.0-SNAPSHOT'
     subprocessjVersion = '0.1.0'
 }
+
 repositories {
     mavenCentral()
     mavenLocal()
