@@ -12,7 +12,6 @@ import com.kazurayam.materialstore.JobTimestamp;
 import com.kazurayam.materialstore.Material;
 import com.kazurayam.materialstore.MaterialstoreException;
 import com.kazurayam.materialstore.Metadata;
-import com.kazurayam.materialstore.MetadataImpl;
 import com.kazurayam.materialstore.MetadataPattern;
 import com.kazurayam.materialstore.Store;
 import com.kazurayam.materialstore.Stores;
@@ -108,7 +107,7 @@ class WebAPITestingChronosTest {
         String weatherData = client.getOpenWeatherData(param);
 
         // save the data into the store
-        Metadata metadata = new MetadataImpl.Builder(param).build();
+        Metadata metadata = Metadata.builderWithMap(param).build();
         store.write(jobName, jobTimestamp, FileType.JSON,
                 metadata, prettyPrintJsonString(weatherData));
     }

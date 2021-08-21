@@ -60,8 +60,8 @@ public class Ex01StoringStringsTest {
                 "And until we meet again, until we meet again",
                 "May God hold you in the palm of his hand");
 
-        Metadata metadata = new MetadataImpl.Builder(
-                new URL("https://youtu.be/VF-ZH4mymtk"))
+        Metadata metadata = Metadata.builderWithUrl(
+                        new URL("https://youtu.be/VF-ZH4mymtk"))
                 .put("title", "An Irish Blessing")
                 .build();
 
@@ -77,8 +77,8 @@ public class Ex01StoringStringsTest {
                 "Somewhere over the rainbow skies are blue",
                 "And the dreams that you dare to dream really do come true");
 
-        Metadata metadata = new MetadataImpl.Builder(
-                new URL("https://www.youtube.com/watch?v=PSZxmZmBfnU"))
+        Metadata metadata = Metadata.builderWithUrl(
+                        new URL("https://www.youtube.com/watch?v=PSZxmZmBfnU"))
                 .put("title", "Over the rainbow")
                 .build();
 

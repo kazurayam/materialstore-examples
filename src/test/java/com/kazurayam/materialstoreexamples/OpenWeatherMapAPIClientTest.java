@@ -89,7 +89,7 @@ public class OpenWeatherMapAPIClientTest {
         assertTrue(compactJson.length() > 0);
 
         // store the JSON file into the store
-        Metadata metadata = new MetadataImpl.Builder(param).build();
+        Metadata metadata = Metadata.builderWithMap(param).build();
         store.write(jobName, jobTimestamp, FileType.JSON, metadata,
                 prettyPrintJsonString(compactJson));
     }
@@ -107,7 +107,7 @@ public class OpenWeatherMapAPIClientTest {
         assertTrue(compactJson.length() > 0);
 
         // store the JSON file into the store
-        Metadata metadata = new MetadataImpl.Builder(param).build();
+        Metadata metadata = Metadata.builderWithMap(param).build();
         store.write(jobName, jobTimestamp, FileType.JSON, metadata,
                 prettyPrintJsonString(compactJson));
     }

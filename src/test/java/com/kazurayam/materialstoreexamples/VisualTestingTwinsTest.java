@@ -6,6 +6,7 @@ import com.kazurayam.materialstore.FileType;
 import com.kazurayam.materialstore.JobName;
 import com.kazurayam.materialstore.JobTimestamp;
 import com.kazurayam.materialstore.Material;
+import com.kazurayam.materialstore.Metadata;
 import com.kazurayam.materialstore.MetadataIgnoredKeys;
 import com.kazurayam.materialstore.MetadataImpl;
 import com.kazurayam.materialstore.MetadataPattern;
@@ -104,20 +105,16 @@ class VisualTestingTwinsTest {
 
         // pickup the materials that belong to each "profiles"
         List<Material> left = store.select(jobName, jobTimestamp,
-                new MetadataPattern.Builder(ImmutableMap.of("profile", profile1)).build()
+                MetadataPattern.builderWithMap(ImmutableMap.of("profile", profile1)).build()
         );
         List<Material> right = store.select(jobName, jobTimestamp,
-                new MetadataPattern.Builder(ImmutableMap.of("profile", profile2)).build()
+                MetadataPattern.builderWithMap(ImmutableMap.of("profile", profile2)).build()
         );
 
         // make DiffArtifacts object
         DiffArtifacts stuffedDiffArtifacts =
                 store.makeDiff(left, right,
-                         new MetadataIgnoredKeys.Builder()
-                                 .ignoreKey("profile")
-                                 .ignoreKey("URL.protocol")
-                                 .ignoreKey("URL.host")
-                                 .build());
+                         MetadataIgnoredKeys.of("profile", "URL.protocol", "URL.host"));
 
         int countWarnings = stuffedDiffArtifacts.countWarnings(0.0d);
         //assertEquals(0, countWarnings);
@@ -150,7 +147,7 @@ class VisualTestingTwinsTest {
         BufferedImage entirePageImage =
                 AShotWrapper.takeEntirePageImage(driver);
         Material material1 = store.write(jobName, jobTimestamp, FileType.PNG,
-                new MetadataImpl.Builder(url)
+                Metadata.builderWithUrl(url)
                         .put("category", "screenshot")
                         .put("profile", profile)
                         .put("xpath", "/html")
@@ -176,7 +173,7 @@ class VisualTestingTwinsTest {
         BufferedImage elementImage =
                 AShotWrapper.takeElementImage(driver, byXpath);
         Material material2 = store.write(jobName, jobTimestamp, FileType.PNG,
-                new MetadataImpl.Builder(url)
+                Metadata.builderWithUrl(url)
                         .put("category", "screenshot")
                         .put("profile", profile)
                         .put("xpath", xpath)
@@ -188,7 +185,7 @@ class VisualTestingTwinsTest {
         // get and store the HTML source of the page
         String html = tidyHtmlString(driver.getPageSource());
         Material material3 = store.write(jobName, jobTimestamp, FileType.HTML,
-                new MetadataImpl.Builder(url)
+                MetadataImpl.builderWithUrl(url)
                         .put("category", "page source")
                         .put("profile", profile)
                         .put("xpath", "/html")

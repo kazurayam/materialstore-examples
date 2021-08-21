@@ -32,6 +32,8 @@ public class OpenWeatherMapClient {
         // find API_KEY to access OpenWeatherMap.
         String API_KEY = API_KEY();
 
+        //System.out.printf("[OpenWeatherMapClient] API_KEY=%s\n", API_KEY);
+
         // will use Apache httpclient to interact with the OpenWeatherMap site
         CloseableHttpClient client = HttpClientBuilder.create().build();
         List<NameValuePair> baseParameters = new ArrayList<NameValuePair>();

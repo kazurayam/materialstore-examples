@@ -66,7 +66,7 @@ public class Ex03TakingScreenshotsTest {
     public void takeScreenshot_OpenWeatherMap_city_Tokyo() throws Exception {
         URL url = new URL("https://openweathermap.org/city/1850147");
         File png = takeOpenWeatherMapPageScreenshot(url);
-        Metadata metadata = new MetadataImpl.Builder(url)
+        Metadata metadata = Metadata.builderWithUrl(url)
                 .put("country", "JP")
                 .put("city", "Tokyo")
                 .build();
@@ -77,7 +77,7 @@ public class Ex03TakingScreenshotsTest {
     public void takeScreeenshot_OpenWeatherMap_city_HoChiMinh() throws Exception {
         URL url = new URL("https://openweathermap.org/city/1566083");
         File png = takeOpenWeatherMapPageScreenshot(url);
-        Metadata metadata = new MetadataImpl.Builder(url)
+        Metadata metadata = MetadataImpl.builderWithUrl(url)
                 .put("country", "VN")
                 .put("city", "Thanh pho Ho Chi Minh")
                 .build();
@@ -88,7 +88,7 @@ public class Ex03TakingScreenshotsTest {
     public void takeScreenshot_OpenWeatherMap_city_Prague() throws Exception {
         URL url = new URL("https://openweathermap.org/city/3067696");
         File png = takeOpenWeatherMapPageScreenshot(url);
-        Metadata metadata = new MetadataImpl.Builder(url)
+        Metadata metadata = Metadata.builderWithUrl(url)
                 .put("country", "CZ")
                 .put("city", "Prague")
                 .build();
@@ -99,7 +99,7 @@ public class Ex03TakingScreenshotsTest {
     public void takeScreenshot_OpenWeatherMap_city_Toronto() throws Exception {
         URL url = new URL("https://openweathermap.org/city/6167865");
         File png = takeOpenWeatherMapPageScreenshot(url);
-        Metadata metadata = new MetadataImpl.Builder(url)
+        Metadata metadata = Metadata.builderWithUrl(url)
                 .put("country", "CA")
                 .put("city", "Toronto")
                 .build();
@@ -138,9 +138,7 @@ public class Ex03TakingScreenshotsTest {
 
         // list 2 cities of which name stats with "To"
         List<Material> selected = store.select(jobName, jobTimestamp,
-                new MetadataPattern
-                        .Builder(ImmutableMap.of("city", Pattern.compile("To.*")))
-                        .build());
+                MetadataPattern.builder().put("city", Pattern.compile("To.*")).build());
         store.reportMaterials(jobName, selected, "selected.html");
 
         //

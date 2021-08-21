@@ -51,7 +51,7 @@ public class Ex02StoringImagesTest {
     public void test_downloading_a_photo_from_web() throws Exception {
         URL url = new URL("https://kazurayam.github.io/materialstore-examples/Chapter01/images/umineko-1960x1960.jpg");
         byte[] bytes = TestUtils.downloadWebResourceAsByteArray(url);
-        Metadata metadata = new MetadataImpl.Builder(url)
+        Metadata metadata = Metadata.builderWithUrl(url)
                 .put("location", "Hachinohe,Aomori prefecture,Japan")
                 .put("venue", "Kabushima")
                 .put("title", "Umineko, a sea bird")
