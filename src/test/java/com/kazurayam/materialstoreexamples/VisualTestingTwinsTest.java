@@ -8,7 +8,7 @@ import com.kazurayam.materialstore.JobTimestamp;
 import com.kazurayam.materialstore.Material;
 import com.kazurayam.materialstore.MaterialList;
 import com.kazurayam.materialstore.Metadata;
-import com.kazurayam.materialstore.MetadataIgnoredKeys;
+import com.kazurayam.materialstore.IgnoringMetadataKeys;
 import com.kazurayam.materialstore.MetadataImpl;
 import com.kazurayam.materialstore.MetadataPattern;
 import com.kazurayam.materialstore.Store;
@@ -116,7 +116,7 @@ class VisualTestingTwinsTest {
         // make DiffArtifacts object
         DiffArtifacts stuffedDiffArtifacts =
                 store.makeDiff(left, right,
-                         MetadataIgnoredKeys.of("profile", "URL.protocol", "URL.host"));
+                         IgnoringMetadataKeys.of("profile", "URL.protocol", "URL.host"));
 
         int countWarnings = stuffedDiffArtifacts.countWarnings(0.0d);
         //assertEquals(0, countWarnings);
