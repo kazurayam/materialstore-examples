@@ -1,0 +1,30 @@
+= materialstore tutorial
+
+== What is the materialstore library
+
+- link:https://github.com/kazurayam/materialstore[GitHub Repository]
+
+- link:https://mvnrepository.com/artifact/com.kazurayam/materialstore[Maven Central URL]
+
+=== API doc
+
+- link:https://kazurayam.github.io/materialstore/api/[materialstore Javadoc]
+
+- link:https://kazurayam.github.io/materialstore-mapper/api/[materialstore-mapper Javadoc]
+
+== 1. The first demonstration
+
+== 2. The simplest usage of materialstore
+
+=== 2.1 Materializing screenshots
+
+=== 2.2 Materializing HTML sources
+
+== 3. Comparing 2 environments of a web app --- Twins mode
+
+== 4. Comparing 2 time-slices of a web app --- Chronos mode
+
+== 5. Inspecting many URLs in one run
+
+== 6. Navigate through a web app
+
