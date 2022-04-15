@@ -1,4 +1,4 @@
-package com.kazurayam.materialstoretut.ch2;
+package com.kazurayam.materialstoretut.ch2materializing;
 
 import com.kazurayam.materialstore.filesystem.JobName;
 import com.kazurayam.materialstore.filesystem.JobTimestamp;
@@ -30,7 +30,7 @@ import java.nio.file.Paths;
  * 5. download HTML source of the web pages pages
  * 6. store the PNG and HTML files into the materialstore
  */
-public class MaterializeGoogleSearchTest {
+public class GoogleSearchTest {
 
     private static Path outputDir;
     private static Store store;
@@ -42,7 +42,7 @@ public class MaterializeGoogleSearchTest {
     public static void beforeAll() throws Exception {
         Path projectDir = Paths.get(System.getProperty("user.dir"));
         outputDir = projectDir.resolve("build/tmp/testOutput")
-                .resolve(MaterializeGoogleSearchTest.class.getName());
+                .resolve(GoogleSearchTest.class.getName());
         Files.createDirectories(outputDir);
         //
         WebDriverManager.chromedriver().setup();
