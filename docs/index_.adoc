@@ -1,18 +1,88 @@
 = materialstore tutorial
 
-== What is the materialstore library
+== Links
 
-- link:https://github.com/kazurayam/materialstore[GitHub Repository]
+=== Repository and product
+
+- link:https://github.com/kazurayam/materialstore[materialstore on GitHub]
 
 - link:https://mvnrepository.com/artifact/com.kazurayam/materialstore[Maven Central URL]
 
-=== API doc
+=== API documents
 
 - link:https://kazurayam.github.io/materialstore/api/[materialstore Javadoc]
 
 - link:https://kazurayam.github.io/materialstore-mapper/api/[materialstore-mapper Javadoc]
 
-== 1. The first demonstration
+== 1. How I developed the Materialstore library
+
+=== Background
+
+Several years ago when I worked for an IT company, I endeavored to develop
+automated UI tests for their Web applications.
+I studied Selenum WebDriver in Java.
+I studied the following article to learn how to take screenshots of web pages.
+
+- https://www.guru99.com/take-screenshot-selenium-webdriver.html[Guru99, How to Take Screenshot in Selenium WebDriver]
+
+I retyped the sample code. Here I will quote the source codes.
+
+[source,java]
+----
+include::../src/test/java/guru99/selenium/screenshot/TakeScreenshotTest.java[]
+----
+
+When I ran this, the test produced a PNG image file in the `tmp` directory
+of the project:
+
+[source]
+----
+:~/github/materialstore-tutorial (master *+)
+$ tree ./tmp
+./tmp
+└── test.png
+
+0 directories, 1 file
+----
+
+The `test.png` image looked as this:
+
+image:images/ch1/test.png[]
+
+The code worked just fine.
+
+=== Problem to solve
+
+I repeated creating Selenium tests to take screenshots of many URLs.
+During the course, I found a few problems in the short code shown above.
+
+==== (1) Metadata of Web pages disappears out of the stored files
+
+By executing the test, I got a file `./tmp/test.png`.
+I knew that this file was created out of a web page at the URL `http://demo.guru99.com/V4/`.
+But that *Metadata* (from which URL it was created, at which stage of test processing it was created, with what input data from human, etc) is not recorded in the stored file `./tmp/test.png`.
+Other programs can not retrieve the metadata out of the stored PNG files.
+Without the metadata, screenshots are not reusable for any other purposes.
+The screenshots become bulky garbage as soon as created.
+
+==== (2) I had to repeat developing code to create Directories to store files
+
+The Selenium library supports taking a screenshot in a temporary file.
+But Selenium does not support organizing the created files.
+I had to create a directory structure to store the PNG files in the test scripts repeatedly.
+
+I tend to run a single test many times. If I want to reserve the outcomes of 1st, 2nd and 3rd ...
+run, I need to create directories with name of timestamp format like
+`20220414_093417`, `20220415_163924` and `20220416_170836`.
+I repeated writing such code to create this directory structure, I got bored of it.
+I realized I should not repeat this any longer.
+
+==== (3) I had to repeat developing code to report the List of stored files
+
+
+==== (4) I wanted to compare 2 sets of screenshots
+
+
 
 == 2. The simplest usage of materialstore
 

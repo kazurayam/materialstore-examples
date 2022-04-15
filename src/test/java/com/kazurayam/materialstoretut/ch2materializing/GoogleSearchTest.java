@@ -1,9 +1,12 @@
 package com.kazurayam.materialstoretut.ch2materializing;
 
+import com.kazurayam.materialstore.Inspector;
 import com.kazurayam.materialstore.filesystem.FileType;
 import com.kazurayam.materialstore.filesystem.JobName;
 import com.kazurayam.materialstore.filesystem.JobTimestamp;
+import com.kazurayam.materialstore.filesystem.MaterialList;
 import com.kazurayam.materialstore.filesystem.Metadata;
+import com.kazurayam.materialstore.filesystem.QueryOnMetadata;
 import com.kazurayam.materialstore.filesystem.Store;
 import com.kazurayam.materialstore.filesystem.Stores;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -95,6 +98,14 @@ public class GoogleSearchTest {
         Metadata metadata2 =
                 Metadata.builder(resultPageURL).put("step", "2").build();
         store.write(jobName, jobTimestamp, FileType.PNG, metadata2, srcFile2);
+        // get the MaterialList
+        MaterialList materialList =
+                store.select(jobName, jobTimestamp, QueryOnMetadata.ANY);
+        // compile the report
+        Inspector inspector = Inspector.newInstance(store);
+        String fileName = jobName.toString() + "-list.html";
+        Path report = inspector.report(materialList, fileName);
+        System.out.println("report found at " + report.toString());
     }
 
     @AfterEach
