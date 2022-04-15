@@ -1,3 +1,0 @@
-include::../attribute.adoc[]
-
-Still under construction.
