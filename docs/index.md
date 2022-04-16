@@ -5,7 +5,16 @@
     -   [Introduction](#introduction)
         -   [Background](#background)
         -   [Problem to solve](#problem-to-solve)
+            -   [Problem1 I had to repeat writing code to create directories to store files](#problem1-i-had-to-repeat-writing-code-to-create-directories-to-store-files)
+            -   [Problem2 Metadata of Web page disappeared](#problem2-metadata-of-web-page-disappeared)
+            -   [Problem3 I had to repeat writing code to view stored files](#problem3-i-had-to-repeat-writing-code-to-view-stored-files)
+            -   [Problem4 I wanted to compare 2 sets of screenshots of a single Web app](#problem4-i-wanted-to-compare-2-sets-of-screenshots-of-a-single-web-app)
         -   [Solution by Materialstore](#solution-by-materialstore)
+            -   [Terminology](#terminology)
+            -   [Sample code](#sample-code)
+            -   [Output directory structure](#output-directory-structure)
+            -   [The index file](#the-index-file)
+            -   [Report generated](#report-generated)
 
 # materialstore tutorial
 
