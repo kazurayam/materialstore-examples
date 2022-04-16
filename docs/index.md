@@ -11,7 +11,7 @@
             -   [Problem4 Want to perform Visual Inspection](#problem4-want-to-perform-visual-inspection)
         -   [Solution by Materialstore](#solution-by-materialstore)
             -   [Terminology](#terminology)
-            -   [Sample code](#sample-code)
+            -   [The Sample code](#the-sample-code)
             -   [Output directory structure](#output-directory-structure)
             -   [The index file](#the-index-file)
             -   [Report generated](#report-generated)
@@ -184,6 +184,9 @@ It required the problem 1, 2 and 3 to be resolved as prerequisite.
 
 ### Solution by Materialstore
 
+I will describe how the Materialstore library solves the problem1, 2 and 3.
+I will describe the solution to the problem 4 later in another section.
+
 #### Terminology
 
 In this document I use a special term "**material**".
@@ -193,7 +196,7 @@ An HTML source text of a web page can be a material as well.
 Any file downloaded from web can be a material
 --- `.png`, `.jpg`, `.html`, `.json`, `.xml`, `.txt`, `.csv`, `.js`, `.css`, `.xlsx`, `.pdf` and so on.
 
-#### Sample code
+#### The Sample code
 
 The following code is a JUnit5-based test written in Java.
 It performs the following processing:
@@ -383,6 +386,26 @@ project’s directory where a tree of directories/files are created.
 
     5 directories, 4 files
 
+The `com.kazurayam.materialstore.filesystem.Store` class manages this directory tree.
+The directory tree has the following structure.
+
+1.  The `Store` object saves everything under a single root directory which is usually named as `store`.
+
+2.  Under the `store` directory there will be one or more *JobName* directories, such as `GoogleSearc`.
+
+3.  Under a *JobName* directory there will be one or more *JobTimestamp* directories, such as `20220415_224026`.
+
+4.  Under a *JobTimestamp* directory there is a file named `index`.
+
+5.  Under a *JobTimestamp* directory there is a directory named `objects`.
+
+6.  Under a `objects` directory there will be one or more *object* files.
+
+7.  An *object* file has a physical file name in the format of 40 Hex-decimal characters followed by a dot `.` and
+    file extension, such as `a7a5c13181ccadc1502bd325df2fa43d6a58a5be.png`.
+
+8.  The *object* files are stored flat in the `objects` directory. There will be no sub-directory under the `objects` directory.
+
 #### The index file
 
 The `store/GoogleSearch/yyyyMMdd_hhmmss/index` file would be interesting.
@@ -391,7 +414,7 @@ Its content is something like this:
     6dd1994bc0d92ba8e040cd38bc3d19c8af78dac6 png {"URL.host":"www.google.com", "URL.path":"", "URL.port":"80", "URL.protocol":"https", "q":"Shohei Ohtani", "step":"1"}
     b54640d1e106e07567413b5a712f8da824577612    png {"URL.host":"www.google.com", "URL.path":"/search", "URL.port":"80", "URL.protocol":"https", "URL.query":"q=Shohei+Ohtani&source=hp&ei=xHdZYuqMAbS32roPrJug8A4&iflsig=AHkkrS4AAAAAYlmF1GUo__T66C-cQAHefKOwYWAzgZva&ved=0ahUKEwjq_urdmpb3AhW0m1YBHawNCO4Q4dUDCAk&uact=5&oq=Shohei+Ohtani&gs_lcp=Cgdnd3Mtd2l6EAMyCwgAEIAEELEDEIMBMgsIABCABBCxAxCDATIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABFAAWCZg5QNoAHAAeACAAY0BiAHmA5IBAzEuM5gBAKABAQ&sclient=gws-wiz", "step":"2"}
 
-Points to note:
+Points to note :
 
 1.  The `index` file contains a sequence of lines. Each line comprises with 3 parts:
     *ID, \_FileType* and *Metadata*. The 3 parts are delimited by tabs. The `index` file
@@ -423,7 +446,11 @@ Points to note:
 9.  The `com.kazurayam.materialstore.filesystem.Store` class implements
     `write` methods to store files into the store,
     and `select` methods to retrieve materials out of the store.
-    See the javadoc of [Store](https://kazurayam.github.io/materialstore/api/).
+    See the javadoc of
+    [Store](https://kazurayam.github.io/materialstore/api/com/kazurayam/materialstore/filesystem/Store.html) class.
+
+10. See the javadoc of
+    [FileType](https://kazurayam.github.io/materialstore/api/com/kazurayam/materialstore/filesystem/FileType.html) for the full list of supported FileTypes.
 
 #### Report generated
 
