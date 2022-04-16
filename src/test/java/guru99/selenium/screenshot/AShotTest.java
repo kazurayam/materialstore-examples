@@ -1,34 +1,34 @@
 package guru99.selenium.screenshot;
 
+import com.kazurayam.ashotwrapper.AShotWrapper;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
-public class TakeScreenshotTest {
+public class AShotTest {
 
     @Test
     public void test_takeScreenshot() throws Exception {
         driver.get("http://demo.guru99.com/V4/");
-        this.takeSnapShot(driver, "./tmp/test.png");
+        this.takeSnapShot(driver, "./tmp/test_by_AShot.png");
     }
 
     void takeSnapShot(WebDriver webdriver, String filePath) throws Exception {
-        // Convert WebDriver object to TakeScreenshot
-        TakesScreenshot scrShot = (TakesScreenshot)webdriver;
+        AShotWrapper.Options options = new AShotWrapper.Options.Builder().build();
         // take a screenshot image
-        File srcFile = scrShot.getScreenshotAs(OutputType.FILE);
+        BufferedImage image = AShotWrapper.takeEntirePageImage(webdriver, options);
+        // save the image into file
         File destFile = new File(filePath);
         // copy the image into the specified destination
-        FileUtils.copyFile(srcFile, destFile);
+        ImageIO.write(image, "PNG", destFile);
     }
 
     @BeforeAll

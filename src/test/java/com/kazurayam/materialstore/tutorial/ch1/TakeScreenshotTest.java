@@ -1,4 +1,4 @@
-package com.kazurayam.materialstoretut.ch1;
+package com.kazurayam.materialstore.tutorial.ch1;
 
 import com.kazurayam.materialstore.Inspector;
 import com.kazurayam.materialstore.filesystem.FileType;
@@ -10,7 +10,6 @@ import com.kazurayam.materialstore.filesystem.QueryOnMetadata;
 import com.kazurayam.materialstore.filesystem.Store;
 import com.kazurayam.materialstore.filesystem.Stores;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

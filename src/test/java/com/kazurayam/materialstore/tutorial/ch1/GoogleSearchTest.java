@@ -1,4 +1,4 @@
-package com.kazurayam.materialstore.tutorial.ch1introduction;
+package com.kazurayam.materialstore.tutorial.ch1;
 
 import com.kazurayam.materialstore.Inspector;
 import com.kazurayam.materialstore.filesystem.FileType;
