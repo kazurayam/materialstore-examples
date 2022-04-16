@@ -20,12 +20,12 @@
 
 Several years ago when I worked for an IT company, I endeavored to develop
 automated UI tests for their Web applications.
-I studied Selenum WebDriver in Java.
+I studied Selenium WebDriver in Java.
 I studied the following article to learn how to take screenshots of web pages.
 
 - https://www.guru99.com/take-screenshot-selenium-webdriver.html[Guru99, How to Take Screenshot in Selenium WebDriver]
 
-I retyped the sample code. Here I will quote the source codes.
+I retyped their sample code. Here I will quote the entire source codes.
 
 [source,java]
 ----
@@ -33,7 +33,7 @@ include::../src/test/java/guru99/selenium/screenshot/TakeScreenshotTest.java[]
 ----
 
 When I ran this, the test produced a PNG image file in the `tmp` directory
-of the project:
+under the project's root directory:
 
 [source]
 ----
@@ -47,7 +47,7 @@ $ tree ./tmp
 
 The `test.png` image looked as this:
 
-image:images/ch1/test.png[]
+image:https://images/ch1/test.png[]
 
 The code worked just fine.
 
