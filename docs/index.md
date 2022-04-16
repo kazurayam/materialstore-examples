@@ -2,21 +2,22 @@
     -   [Links](#links)
         -   [Repository and product](#repository-and-product)
         -   [API documents](#api-documents)
-    -   [Introduction](#introduction)
-        -   [Background](#background)
-        -   [Problem to solve](#problem-to-solve)
-            -   [Problem1 Shouldn’t repeat inventing directory structures](#problem1-shouldnt-repeat-inventing-directory-structures)
-            -   [Problem2 Metadata of Web page disappeared](#problem2-metadata-of-web-page-disappeared)
-            -   [Problem3 Shouldn’t repeat writing code for reporting](#problem3-shouldnt-repeat-writing-code-for-reporting)
-            -   [Problem4 Want to perform Visual Inspection](#problem4-want-to-perform-visual-inspection)
-        -   [Solution by Materialstore](#solution-by-materialstore)
-            -   [Terminology](#terminology)
-            -   [The Sample code](#the-sample-code)
-            -   [Output directory structure](#output-directory-structure)
-            -   [The index file](#the-index-file)
-            -   [Report generated](#report-generated)
+    -   [Background](#background)
+    -   [Problem to solve](#problem-to-solve)
+        -   [Problem1 Shouldn’t repeat inventing directory structures](#problem1-shouldnt-repeat-inventing-directory-structures)
+        -   [Problem2 Metadata of Web page disappeared](#problem2-metadata-of-web-page-disappeared)
+        -   [Problem3 Shouldn’t repeat writing code for reporting](#problem3-shouldnt-repeat-writing-code-for-reporting)
+        -   [Problem4 Want to perform Visual Inspection](#problem4-want-to-perform-visual-inspection)
+    -   [Solution by Materialstore](#solution-by-materialstore)
+        -   [Terminology](#terminology)
+        -   [The Sample code](#the-sample-code)
+        -   [Directory structure](#directory-structure)
+        -   [index file with Metadata](#index-file-with-metadata)
+        -   [Report generated](#report-generated)
 
 # materialstore tutorial
+
+author: kazurayam, #1 April 2022
 
 ## Links
 
@@ -32,9 +33,7 @@
 
 -   [materialstore-mapper Javadoc](https://kazurayam.github.io/materialstore-mapper/api/)
 
-## Introduction
-
-### Background
+## Background
 
 Several years ago when I worked for an IT company, I endeavored to develop
 automated UI tests for their Web applications.
@@ -124,12 +123,12 @@ The `test.png` image looked as this:
 
 The code worked just fine.
 
-### Problem to solve
+## Problem to solve
 
 Based on the sample code above, I wrote many Selenium tests that take bunches of screenshots.
 During the course, I found a few problems in the code shown above.
 
-#### Problem1 Shouldn’t repeat inventing directory structures
+### Problem1 Shouldn’t repeat inventing directory structures
 
 The Selenium library supports taking a screenshot of browser window
 and saving image into a temporary file.
@@ -146,7 +145,7 @@ The [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle came 
 I wanted to invent a reusable library that manages a directory tree to
 store screenshots created by my Selenium tests.
 
-#### Problem2 Metadata of Web page disappeared
+### Problem2 Metadata of Web page disappeared
 
 By executing the test, I got a file `./tmp/test.png`.
 In fact the file was created out of a web page at the URL `http://demo.guru99.com/V4/`.
@@ -160,14 +159,14 @@ was created out of the URL `http://demo.guru99.com/V4/`.
 Without the metadata, screenshots are not reusable for any purposes.
 Screenshots become garbage as soon as created.
 
-#### Problem3 Shouldn’t repeat writing code for reporting
+### Problem3 Shouldn’t repeat writing code for reporting
 
 When I got many PNG files on disk,
 naturally I wanted a easy method to view images.
 I wrote a code to generate an HTML report of PNG files.
 I realised I should make the code as a reusable library.
 
-#### Problem4 Want to perform Visual Inspection
+### Problem4 Want to perform Visual Inspection
 
 I developed a set of tests that take screenshots of web pages of
 a single web app with 100% coverage.
@@ -182,12 +181,12 @@ which part of my web application needs to be looked at.
 However, a program that compares 2 sets of screenshots was difficult to implement.
 It required the problem 1, 2 and 3 to be resolved as prerequisite.
 
-### Solution by Materialstore
+## Solution by Materialstore
 
 I will describe how the Materialstore library solves the problem1, 2 and 3.
 I will describe the solution to the problem 4 later in another section.
 
-#### Terminology
+### Terminology
 
 In this document I use a special term "**material**".
 A material is a file of which content is downloaded from a URL.
@@ -196,7 +195,7 @@ An HTML source text of a web page can be a material as well.
 Any file downloaded from web can be a material
 --- `.png`, `.jpg`, `.html`, `.json`, `.xml`, `.txt`, `.csv`, `.js`, `.css`, `.xlsx`, `.pdf` and so on.
 
-#### The Sample code
+### The Sample code
 
 The following code is a JUnit5-based test written in Java.
 It performs the following processing:
@@ -366,7 +365,7 @@ It performs the following processing:
         }
     }
 
-#### Output directory structure
+### Directory structure
 
 When I ran the test, it creates a directory named `store` under the
 project’s directory where a tree of directories/files are created.
@@ -408,7 +407,7 @@ The directory tree has the following structure.
 
 As you see, the **problem1 (Directory structure)** is resolved by the `Store`.
 
-#### The index file
+### index file with Metadata
 
 The `store/GoogleSearch/yyyyMMdd_hhmmss/index` file would be interesting.
 Its content is something like this:
@@ -456,7 +455,7 @@ Points to note :
 
 As you see, the **\*problem2 (Metadata)** is resolved by the `Store`.
 
-#### Report generated
+### Report generated
 
 The test generated a HTML like this:
 
