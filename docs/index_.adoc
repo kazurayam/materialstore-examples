@@ -47,13 +47,13 @@ $ tree ./tmp
 
 The `test.png` image looked as this:
 
-image:https://images/ch1/test.png[]
+image:https://kazurayam.github.io/materialstore-tutorial/images/ch1/test.png[]
 
 The code worked just fine.
 
 === Problem to solve
 
-I wrote many Selenium tests that take some hundreds screenshots.
+I wrote many Selenium tests that take bunches of screenshots.
 During the course, I found several problems in the code shown above.
 
 ==== (1) I had to repeat writing code to create directories to store files

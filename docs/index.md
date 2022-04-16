@@ -29,12 +29,12 @@
 
 Several years ago when I worked for an IT company, I endeavored to develop
 automated UI tests for their Web applications.
-I studied Selenum WebDriver in Java.
+I studied Selenium WebDriver in Java.
 I studied the following article to learn how to take screenshots of web pages.
 
 -   [Guru99, How to Take Screenshot in Selenium WebDriver](https://www.guru99.com/take-screenshot-selenium-webdriver.html)
 
-I retyped the sample code. Here I will quote the source codes.
+I retyped their sample code. Here I will quote the entire source codes.
 
     package guru99.selenium.screenshot;
 
@@ -59,28 +59,37 @@ I retyped the sample code. Here I will quote the source codes.
 
         @Test
         public void test_takeScreenshot() throws Exception {
+            // Chrome browser is opened by @BforeEach-annotated method
+
+            // Navigate to the target URL
             driver.get("http://demo.guru99.com/V4/");
-            // Convert WebDriver object to TakeScreenshot
+
+            // Convert WebDriver object to an instance of TakesScreenshot
             TakesScreenshot scrShot = (TakesScreenshot)driver;
-            // take a screenshot image
+
+            // take a screenshot in PNG format, which will be stored in a temporary file
             File imageFile = scrShot.getScreenshotAs(OutputType.FILE);
-            // copy the image into the specified destination
+
+            // copy the image file into the specified destination
             File destFile = new File("./tmp/test.png");
             FileUtils.copyFile(imageFile, destFile);
         }
 
         @BeforeAll
         public static void beforeAll() {
+            // we use https://bonigarcia.dev/webdrivermanager/ to control ChromeDriver
             WebDriverManager.chromedriver().setup();
         }
 
         @BeforeEach
         public void beforeEach() {
+            // open Chrome browser
             driver = new ChromeDriver();
         }
 
         @AfterEach
         public void afterEach() {
+            // close Chrome browser
             if (driver != null) {
                 driver.quit();
                 driver = null;
@@ -91,7 +100,7 @@ I retyped the sample code. Here I will quote the source codes.
     }
 
 When I ran this, the test produced a PNG image file in the `tmp` directory
-of the project:
+under the project’s root directory:
 
     :~/github/materialstore-tutorial (master *+)
     $ tree ./tmp
@@ -102,13 +111,13 @@ of the project:
 
 The `test.png` image looked as this:
 
-![test](images/ch1/test.png)
+![test](https://kazurayam.github.io/materialstore-tutorial/images/ch1/test.png)
 
 The code worked just fine.
 
 ### Problem to solve
 
-I wrote many Selenium tests that take some hundreds screenshots.
+I wrote many Selenium tests that take bunches of screenshots.
 During the course, I found several problems in the code shown above.
 
 #### (1) I had to repeat writing code to create directories to store files
