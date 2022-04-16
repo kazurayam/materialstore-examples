@@ -122,55 +122,61 @@ During the course, I found several problems in the code shown above.
 
 #### (1) I had to repeat writing code to create directories to store files
 
-The Selenium library supports taking a screenshot into a temporary file.
-But Selenium does not provide a mean of organizing the created files.
-I had to repeatedly write codes that create a directory structure to store the PNG files.
+The Selenium library supports taking a screenshot of browser window
+and saving image into a temporary file.
+However, Selenium does not provide a mean of organizing the created files.
+I had to write codes that create a directory structure to store the PNG files.
 
-I tend to run a single test many times. If I want to reserve the outcomes of 1st, 2nd and 3rd execution,
-I need to create directories with name of timestamp format like
+I ran a single test many times, and I wanted to preserve the outcomes
+of 1st, 2nd and 3rd run.
+So I need to create directories with name of timestamp format like
 `20220414_093417`, `20220415_163924`, `20220416_170836` and so on.
-I repeated writing such code to create this directory structure.
-It was just boring.
-I remembered the "Don’t Repeat Yourself" principle.
+I repeated inventing directory trees to store PNG files.
+It was just tiring and boring.
 
-#### (2) Metadata of Web pages disappear
+The [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle came up to me.
+I wanted to invent a reusable library that manages a directory tree to
+store screenshots created by my Selenium tests.
+
+#### (2) Metadata of Web page disappeared
 
 By executing the test, I got a file `./tmp/test.png`.
 In fact the file was created out of a web page at the URL `http://demo.guru99.com/V4/`.
-But that **Metadata** (from which URL it was created,
-at which stage of test processing it was created,
-with what input data from human, etc) is not recorded
-in the stored image file.
-Other programs will never be informed of the metadata that
-the `./tmp/test.png` file was created
-out of the URL `http://demo.guru99.com/V4/`.
+But the metadata (from which URL it was created,
+at which stage of test processing it was created, etc)
+is not recorded in the stored file.
+Other program may read the file to reuse somehow, but it will never
+be informed of the metadata that the `./tmp/test.png` file
+was created out of the URL `http://demo.guru99.com/V4/`.
+
 Without the metadata, screenshots are not reusable for any purposes.
-The screenshots become bulky garbages as soon as created.
+Screenshots become garbage as soon as created.
 
-#### (3) I had to repeat writing code to report the List of stored files
+#### (3) I had to repeat writing code to view stored files
 
-When I get many PNG files on disk,
-naturally I want to have a method of viewing them easily.
+When I got many PNG files on disk,
+naturally I wanted a easy method to view images.
 I wrote a code to generate an HTML report of PNG files.
-I repeatedly need the report for many other cases.
 I realised I should make the code as a reusable library.
 
 #### (4) I wanted to compare 2 sets of screenshots of a single Web app
 
-I developed a set of tests that take screenshots with 100% coverage
-of page types of a single web app.
-Then I wanted to perform Visual Inspection: compare the Development env vs the Production env,
-or a system Before vs After updating software version.
+I developed a set of tests that take screenshots of web pages of
+a single web app with 100% coverage.
+Then I wanted to perform **Visual Inspection**:
+compare the Development environment vs the Production environment;
+compare the pages Before vs After a software update.
 
-If I find any visual differences between the two sets,
-that becomes the best checklist for me to improve the software quality.
-The visual differences could drive my development works productively.
+Sometimes I find unexpected visual differences between the two sets.
+The report of comparison becomes the best checklist for me
+to improve the quality of software.
 
 ### Solution by Materialstore
 
-#### test code
+#### Sample code
 
-The following Java8 program ia s JUnit8 test, which performs the following:
+The following code is a JUnit5-based test in Java,
+which performs the following:
 
 1.  it opens Chrome browser, navigates to `https://www.google.com`
 
@@ -227,68 +233,94 @@ The following Java8 program ia s JUnit8 test, which performs the following:
 
         private static Path outputDir;
         private static Store store;
+
         private JobName jobName;
         private JobTimestamp jobTimestamp;
         private WebDriver driver;
 
         @BeforeAll
         public static void beforeAll() throws Exception {
+            // we use WebDriverManager to control ChromeDriver version
+            WebDriverManager.chromedriver().setup();
+
+            // create a directory to write output from this test class
             Path projectDir = Paths.get(System.getProperty("user.dir"));
             outputDir = projectDir.resolve("build/tmp/testOutput")
                     .resolve(GoogleSearchTest.class.getName());
             Files.createDirectories(outputDir);
-            WebDriverManager.chromedriver().setup();
+
+            // create the "store" directory where all of downloaded materials are stored
             Path root = outputDir.resolve("store");
+
+            // create the Store instance
             store = Stores.newInstance(root);
         }
 
         @BeforeEach
         public void beforeEach() {
+            // specify names of directories under the "store" directory
             jobName = new JobName("GoogleSearch");
             jobTimestamp = JobTimestamp.now();
+
+            // open Chrome browser
             driver = new ChromeDriver();
         }
 
         @Test
         public void test_google_search() throws Exception {
             WebDriverWait wait = new WebDriverWait(driver, 10);
+
             // open the Google Search page
             URL entryURL = new URL("https://www.google.com");
             driver.navigate().to(entryURL);
-            // set a query into the <input name="q">
+
+            // set a query string into the <input name="q"> element
             By by_input_q = By.cssSelector("input[name=\"q\"]");
             wait.until(ExpectedConditions.visibilityOfElementLocated(by_input_q));
             WebElement we_input_q = driver.findElement(by_input_q);
             String qValue = "Shohei Ohtani";
             we_input_q.sendKeys(qValue);
-            // take the screenshot of the Google Search page,
+
+            // take a screenshot of the Google Search page,
             TakesScreenshot scrShot = (TakesScreenshot) driver;
-            File srcFile1 = scrShot.getScreenshotAs(OutputType.FILE);
+            File tempFile1 = scrShot.getScreenshotAs(OutputType.FILE);
+
             // save the image into the store
             Metadata metadata =
                     Metadata.builder(entryURL)
-                            .put("step", "1")
-                            .put("q", qValue)
+                            .put("step", "1")    // remember the step sequence
+                            .put("q", qValue)    // remember the query string
                             .build();
-            store.write(jobName, jobTimestamp, FileType.PNG, metadata, srcFile1);
-            // send ENTER to execute a search request
+            store.write(jobName, jobTimestamp, FileType.PNG, metadata, tempFile1);
+
+            // send ENTER to execute a search request;
+            // then browser transitions to the Search Result page
             we_input_q.sendKeys(Keys.chord(Keys.ENTER));
-            // wait for the search result page to load
+
+            // wait for the Search Result page to load completely
             By by_img_logo = By.xpath("//div[contains(@class,'logo')]/a/img");
             wait.until(ExpectedConditions.visibilityOfElementLocated(by_img_logo));
-            // take screenshot of the result page, store the image into the store
-            File srcFile2 = scrShot.getScreenshotAs(OutputType.FILE);
+
+            // take a screenshot of the Search Result page
+            File tempFile2 = scrShot.getScreenshotAs(OutputType.FILE);
+
             // save the image into the store
             URL resultPageURL = new URL(driver.getCurrentUrl());
-            Metadata metadata2 = Metadata.builder(resultPageURL).put("step", "2").build();
-            store.write(jobName, jobTimestamp, FileType.PNG, metadata2, srcFile2);
-            // get the MaterialList
+            Metadata metadata2 =
+                    Metadata.builder(resultPageURL)
+                            .put("step", "2")   // this is the 2nd step
+                            .build();
+            store.write(jobName, jobTimestamp, FileType.PNG, metadata2, tempFile2);
+
+            // Now I want to compile a report in HTML
+            // get the list of files stored in the storage directory
             MaterialList materialList = store.select(jobName, jobTimestamp, QueryOnMetadata.ANY);
+
             // compile the report
             Inspector inspector = Inspector.newInstance(store);
             String fileName = jobName.toString() + "-list.html";
             Path report = inspector.report(materialList, fileName);
-            System.out.println("report found at " + report.toString());
+            System.out.println("The report will be found at " + report.toString());
         }
 
         @AfterEach

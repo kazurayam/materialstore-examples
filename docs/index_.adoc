@@ -58,55 +58,61 @@ During the course, I found several problems in the code shown above.
 
 ==== (1) I had to repeat writing code to create directories to store files
 
-The Selenium library supports taking a screenshot into a temporary file.
-But Selenium does not provide a mean of organizing the created files.
-I had to repeatedly write codes that create a directory structure to store the PNG files.
+The Selenium library supports taking a screenshot of browser window
+and saving image into a temporary file.
+However, Selenium does not provide a mean of organizing the created files.
+I had to write codes that create a directory structure to store the PNG files.
 
-I tend to run a single test many times. If I want to reserve the outcomes of 1st, 2nd and 3rd execution,
-I need to create directories with name of timestamp format like
+I ran a single test many times, and I wanted to preserve the outcomes
+of 1st, 2nd and 3rd run.
+So I need to create directories with name of timestamp format like
 `20220414_093417`, `20220415_163924`, `20220416_170836` and so on.
-I repeated writing such code to create this directory structure.
-It was just boring.
-I remembered the "Don't Repeat Yourself" principle.
+I repeated inventing directory trees to store PNG files.
+It was just tiring and boring.
 
-==== (2) Metadata of Web pages disappear
+The link:https://en.wikipedia.org/wiki/Don%27t_repeat_yourself[DRY] principle came up to me.
+I wanted to invent a reusable library that manages a directory tree to
+store screenshots created by my Selenium tests.
+
+==== (2) Metadata of Web page disappeared
 
 By executing the test, I got a file `./tmp/test.png`.
 In fact the file was created out of a web page at the URL `http://demo.guru99.com/V4/`.
-But that *Metadata* (from which URL it was created,
-at which stage of test processing it was created,
-with what input data from human, etc) is not recorded
-in the stored image file.
-Other programs will never be informed of the metadata that
-the `./tmp/test.png` file was created
-out of the URL `http://demo.guru99.com/V4/`.
+But the metadata (from which URL it was created,
+at which stage of test processing it was created, etc)
+is not recorded in the stored file.
+Other program may read the file to reuse somehow, but it will never
+be informed of the metadata that the `./tmp/test.png` file
+was created out of the URL `http://demo.guru99.com/V4/`.
+
 Without the metadata, screenshots are not reusable for any purposes.
-The screenshots become bulky garbages as soon as created.
+Screenshots become garbage as soon as created.
 
-==== (3) I had to repeat writing code to report the List of stored files
+==== (3) I had to repeat writing code to view stored files
 
-When I get many PNG files on disk,
-naturally I want to have a method of viewing them easily.
+When I got many PNG files on disk,
+naturally I wanted a easy method to view images.
 I wrote a code to generate an HTML report of PNG files.
-I repeatedly need the report for many other cases.
 I realised I should make the code as a reusable library.
 
 ==== (4) I wanted to compare 2 sets of screenshots of a single Web app
 
-I developed a set of tests that take screenshots with 100% coverage
-of page types of a single web app.
-Then I wanted to perform Visual Inspection: compare the Development env vs the Production env,
-or a system Before vs After updating software version.
+I developed a set of tests that take screenshots of web pages of
+a single web app with 100% coverage.
+Then I wanted to perform *Visual Inspection*:
+compare the Development environment vs the Production environment;
+compare the pages Before vs After a software update.
 
-If I find any visual differences between the two sets,
-that becomes the best checklist for me to improve the software quality.
-The visual differences could drive my development works productively.
+Sometimes I find unexpected visual differences between the two sets.
+The report of comparison becomes the best checklist for me
+to improve the quality of software.
 
 === Solution by Materialstore
 
-==== test code
+==== Sample code
 
-The following Java8 program ia s JUnit8 test, which performs the following:
+The following code is a JUnit5-based test in Java,
+which performs the following:
 
 1. it opens Chrome browser, navigates to `https://www.google.com`
 2. in the `<input type="text" name="q">` field, type a query string, take a screenshot and save the PNG image into the `store` directory.
