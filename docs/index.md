@@ -126,9 +126,9 @@ Other programs can not retrieve the metadata out of the stored PNG files.
 Without the metadata, screenshots are not reusable for any other purposes.
 The screenshots become bulky garbage as soon as created.
 
-#### (2) I had to repeat developing code to create Directories to store files
+#### (2) I had to repeat writing code to create directories to store files
 
-The Selenium library supports taking a screenshot in a temporary file.
+The Selenium library supports taking a screenshot into a temporary file.
 But Selenium does not support organizing the created files.
 I had to create a directory structure to store the PNG files in the test scripts repeatedly.
 
@@ -138,9 +138,28 @@ run, I need to create directories with name of timestamp format like
 I repeated writing such code to create this directory structure, I got bored of it.
 I realized I should not repeat this any longer.
 
-#### (3) I had to repeat developing code to report the List of stored files
+#### (3) I had to repeat writing code to report the List of stored files
+
+Once I got many PNG files on disk, naturally I wanted to have a concise view of them.
+I wanted to create an HTML which renders the PNG files.
+So I wrote a code to generate the HTML report.
+I wanted reuse the code for other web applications.
+I realised I should make the code as a reusable library.
 
 #### (4) I wanted to compare 2 sets of screenshots
+
+I took a set of screenshots of Development environment.
+And I took a set of screenshot of Production environment.
+I wanted to compare these 2 sets of visual images.
+There could be visual differences between the two.
+The differences would suggest something that I should look into.
+Many of them would come from known difference between the two (application version could be different,
+background database contains modified data, etc). But I may find something due to unknown reason.
+That would point me to "bugs" to fix.
+
+I can take 2 sets of screenshots of a single web application at 2 different timing: BEFORE upgrading and AFTER upgrading.
+I want to take a list of visual differences between the two.
+The list would help me ensuring that I have done nothing unexpected, which is called "fault".
 
 ## 2. The simplest usage of materialstore
 

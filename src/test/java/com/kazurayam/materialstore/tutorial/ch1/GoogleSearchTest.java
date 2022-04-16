@@ -1,4 +1,4 @@
-package com.kazurayam.materialstoretut.ch2materializing;
+package com.kazurayam.materialstore.tutorial.ch1introduction;
 
 import com.kazurayam.materialstore.Inspector;
 import com.kazurayam.materialstore.filesystem.FileType;
@@ -29,7 +29,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A Selenium Test that does the following:
@@ -54,9 +53,7 @@ public class GoogleSearchTest {
         outputDir = projectDir.resolve("build/tmp/testOutput")
                 .resolve(GoogleSearchTest.class.getName());
         Files.createDirectories(outputDir);
-        //
         WebDriverManager.chromedriver().setup();
-        //
         Path root = outputDir.resolve("store");
         store = Stores.newInstance(root);
     }
@@ -69,7 +66,7 @@ public class GoogleSearchTest {
     }
 
     @Test
-    public void test_google_for_Shohei_Ohtani() throws Exception {
+    public void test_google_search() throws Exception {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         // open the Google Search page
         URL entryURL = new URL("https://www.google.com");
@@ -78,13 +75,17 @@ public class GoogleSearchTest {
         By by_input_q = By.cssSelector("input[name=\"q\"]");
         wait.until(ExpectedConditions.visibilityOfElementLocated(by_input_q));
         WebElement we_input_q = driver.findElement(by_input_q);
-        we_input_q.sendKeys("Shohei Ohtani");
+        String qValue = "Shohei Ohtani";
+        we_input_q.sendKeys(qValue);
         // take the screenshot of the Google Search page,
         TakesScreenshot scrShot = (TakesScreenshot) driver;
         File srcFile1 = scrShot.getScreenshotAs(OutputType.FILE);
         // save the image into the store
         Metadata metadata =
-                Metadata.builder(entryURL).put("step", "1").build();
+                Metadata.builder(entryURL)
+                        .put("step", "1")
+                        .put("q", qValue)
+                        .build();
         store.write(jobName, jobTimestamp, FileType.PNG, metadata, srcFile1);
         // send ENTER to execute a search request
         we_input_q.sendKeys(Keys.chord(Keys.ENTER));
@@ -95,12 +96,10 @@ public class GoogleSearchTest {
         File srcFile2 = scrShot.getScreenshotAs(OutputType.FILE);
         // save the image into the store
         URL resultPageURL = new URL(driver.getCurrentUrl());
-        Metadata metadata2 =
-                Metadata.builder(resultPageURL).put("step", "2").build();
+        Metadata metadata2 = Metadata.builder(resultPageURL).put("step", "2").build();
         store.write(jobName, jobTimestamp, FileType.PNG, metadata2, srcFile2);
         // get the MaterialList
-        MaterialList materialList =
-                store.select(jobName, jobTimestamp, QueryOnMetadata.ANY);
+        MaterialList materialList = store.select(jobName, jobTimestamp, QueryOnMetadata.ANY);
         // compile the report
         Inspector inspector = Inspector.newInstance(store);
         String fileName = jobName.toString() + "-list.html";

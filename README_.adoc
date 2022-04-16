@@ -5,4 +5,3 @@ This project publishes a tutorial documentation for the https://github.com/kazur
 See the doc at the following URL:
 
 - https://kazurayam.github.io/materialstore-tutorial/
-
