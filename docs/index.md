@@ -406,6 +406,8 @@ The directory tree has the following structure.
 
 8.  The *object* files are stored flat in the `objects` directory. There will be no sub-directory under the `objects` directory.
 
+As you see, the **problem1 (Directory structure)** is resolved by the `Store`.
+
 #### The index file
 
 The `store/GoogleSearch/yyyyMMdd_hhmmss/index` file would be interesting.
@@ -452,6 +454,8 @@ Points to note :
 10. See the javadoc of
     [FileType](https://kazurayam.github.io/materialstore/api/com/kazurayam/materialstore/filesystem/FileType.html) for the full list of supported FileTypes.
 
+As you see, the **\*problem2 (Metadata)** is resolved by the `Store`.
+
 #### Report generated
 
 The test generated a HTML like this:
@@ -460,8 +464,4 @@ The test generated a HTML like this:
 
 ![GoogleSearch html](images/ch1/GoogleSearch-html.png)
 
-In this section, I showed a sample code that demonstrates how
-the materialstore library resolves the Problem1 (directory structure),
-Problem2 (Metadata) and Problem3 (Report).
-The Problem4 (Visual Inspection) is a lot more complex stuff.
-I will discuss Visual Inspection later.
+As you see, the **problem3 (Report)** is resolved by the `Inspector`.
