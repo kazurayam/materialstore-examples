@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -50,53 +51,65 @@ public class GoogleSearchTest {
 
     @BeforeAll
     public static void beforeAll() throws Exception {
-        WebDriverManager.chromedriver().setup();    // <1>
+        // we use WebDriverManager to control the version of ChromeDriver
+        WebDriverManager.chromedriver().setup();
+
+        // create a directory where this test will write output files
         Path projectDir = Paths.get(System.getProperty("user.dir"));
         outputDir = projectDir.resolve("build/tmp/testOutput")
                 .resolve(GoogleSearchTest.class.getName());
-        Files.createDirectories(outputDir);    // <2>
-        Path root = outputDir.resolve("store");    // <3>
-        store = Stores.newInstance(root);    // <4>
+        Files.createDirectories(outputDir);
+
+        // create a directory "store"
+        Path root = outputDir.resolve("store");
+
+        // prepare an instance of com.kazurayam.materialstore.filesystem.Store
+        // which will control every writing/reading files within the store
+        store = Stores.newInstance(root);
     }
 
     @BeforeEach
     public void beforeEach() {
-        // <5>
+        // specify names of sub-directories
         jobName = new JobName("GoogleSearch");
         jobTimestamp = JobTimestamp.now();
 
-        driver = new ChromeDriver(); // <6>
+        // open Chrome browser
+        driver = new ChromeDriver();
+        // set the size of browser window
+        Dimension dem = new Dimension(1024,768);
+        driver.manage().window().setSize(dem);
     }
 
     @Test
     public void test_google_search() throws Exception {
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
-        // <7>
-        URL entryURL = new URL("https://www.google.com");
-        driver.navigate().to(entryURL);
+        // let Chrome navigate to the Google Search page
+        URL searchPage = new URL("https://www.google.com");
+        driver.navigate().to(searchPage);
 
-        // <8>
+        // type a query string into the <input type="text" name="q"> field
         By by_input_q = By.cssSelector("input[name=\"q\"]");
         wait.until(ExpectedConditions.visibilityOfElementLocated(by_input_q));
         WebElement we_input_q = driver.findElement(by_input_q);
         String qValue = "Shohei Ohtani";
         we_input_q.sendKeys(qValue);
 
-        // <9>
+        // take screenshot of the Google Search page
         TakesScreenshot scrShot = (TakesScreenshot) driver;
         File tempFile1 = scrShot.getScreenshotAs(OutputType.FILE);
 
-        // <10>
+        // store the screenshot into the store
         Metadata metadata =
-                Metadata.builder(entryURL)
-                        .put("step", "1")    // remember the step sequence
-                        .put("q", qValue)    // remember the query string
+                Metadata.builder(searchPage)
+                        .put("step", "1")    // remember the step identification
+                        .put("q", qValue)    // remember the query string typed
                         .build();
         store.write(jobName, jobTimestamp, FileType.PNG, metadata, tempFile1);
 
         // send ENTER to execute a search request;
-        // then browser transitions to the Search Result page
+        // then the browser will navigate to the Search Result page
         we_input_q.sendKeys(Keys.chord(Keys.ENTER));
 
         // wait for the Search Result page to load completely
@@ -114,11 +127,11 @@ public class GoogleSearchTest {
                         .build();
         store.write(jobName, jobTimestamp, FileType.PNG, metadata2, tempFile2);
 
-        // Now I want to compile a report in HTML
-        // get the list of files stored in the storage directory
+        // Now I want to compile a report in HTML.
+        // get the list of all materials stored in the "store/<jobName>/<jobTimestamp>" directory
         MaterialList materialList = store.select(jobName, jobTimestamp, QueryOnMetadata.ANY);
 
-        // compile the report
+        // compile an HTML report of the materials
         Inspector inspector = Inspector.newInstance(store);
         String fileName = jobName.toString() + "-list.html";
         Path report = inspector.report(materialList, fileName);
