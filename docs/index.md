@@ -5,10 +5,10 @@
     -   [Introduction](#introduction)
         -   [Background](#background)
         -   [Problem to solve](#problem-to-solve)
-            -   [Problem1 I had to repeat writing code to create directories to store files](#problem1-i-had-to-repeat-writing-code-to-create-directories-to-store-files)
+            -   [Problem1 Shouldn’t repeat inventing directory structures](#problem1-shouldnt-repeat-inventing-directory-structures)
             -   [Problem2 Metadata of Web page disappeared](#problem2-metadata-of-web-page-disappeared)
-            -   [Problem3 I had to repeat writing code to view stored files](#problem3-i-had-to-repeat-writing-code-to-view-stored-files)
-            -   [Problem4 I wanted to compare 2 sets of screenshots of a single Web app](#problem4-i-wanted-to-compare-2-sets-of-screenshots-of-a-single-web-app)
+            -   [Problem3 Shouldn’t repeat writing code for reporting](#problem3-shouldnt-repeat-writing-code-for-reporting)
+            -   [Problem4 Want to perform Visual Inspection](#problem4-want-to-perform-visual-inspection)
         -   [Solution by Materialstore](#solution-by-materialstore)
             -   [Terminology](#terminology)
             -   [Sample code](#sample-code)
@@ -129,7 +129,7 @@ The code worked just fine.
 Based on the sample code above, I wrote many Selenium tests that take bunches of screenshots.
 During the course, I found a few problems in the code shown above.
 
-#### Problem1 I had to repeat writing code to create directories to store files
+#### Problem1 Shouldn’t repeat inventing directory structures
 
 The Selenium library supports taking a screenshot of browser window
 and saving image into a temporary file.
@@ -160,14 +160,14 @@ was created out of the URL `http://demo.guru99.com/V4/`.
 Without the metadata, screenshots are not reusable for any purposes.
 Screenshots become garbage as soon as created.
 
-#### Problem3 I had to repeat writing code to view stored files
+#### Problem3 Shouldn’t repeat writing code for reporting
 
 When I got many PNG files on disk,
 naturally I wanted a easy method to view images.
 I wrote a code to generate an HTML report of PNG files.
 I realised I should make the code as a reusable library.
 
-#### Problem4 I wanted to compare 2 sets of screenshots of a single Web app
+#### Problem4 Want to perform Visual Inspection
 
 I developed a set of tests that take screenshots of web pages of
 a single web app with 100% coverage.
@@ -204,11 +204,13 @@ It performs the following processing:
 
 3.  take a screenshot and save the PNG image into the `store` directory.
 
-4.  and do SEND; wait for the response
+4.  and push SEND key; wait for the response
 
-5.  take another screenshot and save it into the `store` directory
+5.  once the Search Result page is shown, take another screenshot and save it into the `store` directory
 
-6.  compile an HTML report that renders the 2 PNG files with the metadata (URL etc)
+6.  compile an HTML report that renders the 2 materials (screenshots in PNG).
+
+7.  the report will show metadata of the materials, such as URL of web pages.
 
 <!-- -->
 
@@ -391,7 +393,7 @@ Its content is something like this:
 
 Points to note:
 
-1.  The `index` file contains a sequence of lines which comprises with 3 parts:
+1.  The `index` file contains a sequence of lines. Each line comprises with 3 parts:
     *ID, \_FileType* and *Metadata*. The 3 parts are delimited by tabs. The `index` file
     is encoded with UTF-8.
 
@@ -404,7 +406,7 @@ Points to note:
 4.  The 40 characters (`ID` for short) are the SHA1 digital signature
     derived from the content byte array of each file.
 
-5.  In the Materialstore world, you, programmer/tester, are no longer responsible for naming each physical files.
+5.  In the Materialstore world, you (a programmer or a tester) are no longer responsible for naming each physical files.
 
 6.  Each line in `index` file contains the **Metadata**: the URL out of which screenshots are taken, and the fact that I made a query for "Shohei Ohtani" to Google.
 
@@ -418,6 +420,11 @@ Points to note:
     You, programmer/tester, are asked to assign descriptive enough
     **Metadata** to each object.
 
+9.  The `com.kazurayam.materialstore.filesystem.Store` class implements
+    `write` methods to store files into the store,
+    and `select` methods to retrieve materials out of the store.
+    See the javadoc of [Store](https://kazurayam.github.io/materialstore/api/).
+
 #### Report generated
 
 The test generated a HTML like this:
@@ -426,6 +433,8 @@ The test generated a HTML like this:
 
 ![GoogleSearch html](images/ch1/GoogleSearch-html.png)
 
-The materialstore library makes it easy for me to
-store the materials (files downloaded from URLs) on to disk,
-and reuse them for later reuse.
+In this section, I showed a sample code that demonstrates how
+the materialstore library resolves the Problem1 (directory structure),
+Problem2 (Metadata) and Problem3 (Report).
+The Problem4 (Visual Inspection) is a lot more complex stuff.
+I will discuss Visual Inspection later.
