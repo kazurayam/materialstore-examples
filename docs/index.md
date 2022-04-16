@@ -120,7 +120,7 @@ The code worked just fine.
 I wrote many Selenium tests that take bunches of screenshots.
 During the course, I found several problems in the code shown above.
 
-#### (1) I had to repeat writing code to create directories to store files
+#### Problem1 I had to repeat writing code to create directories to store files
 
 The Selenium library supports taking a screenshot of browser window
 and saving image into a temporary file.
@@ -138,7 +138,7 @@ The [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle came 
 I wanted to invent a reusable library that manages a directory tree to
 store screenshots created by my Selenium tests.
 
-#### (2) Metadata of Web page disappeared
+#### Problem2 Metadata of Web page disappeared
 
 By executing the test, I got a file `./tmp/test.png`.
 In fact the file was created out of a web page at the URL `http://demo.guru99.com/V4/`.
@@ -152,14 +152,14 @@ was created out of the URL `http://demo.guru99.com/V4/`.
 Without the metadata, screenshots are not reusable for any purposes.
 Screenshots become garbage as soon as created.
 
-#### (3) I had to repeat writing code to view stored files
+#### Problem3 I had to repeat writing code to view stored files
 
 When I got many PNG files on disk,
 naturally I wanted a easy method to view images.
 I wrote a code to generate an HTML report of PNG files.
 I realised I should make the code as a reusable library.
 
-#### (4) I wanted to compare 2 sets of screenshots of a single Web app
+#### Problem4 I wanted to compare 2 sets of screenshots of a single Web app
 
 I developed a set of tests that take screenshots of web pages of
 a single web app with 100% coverage.
@@ -172,6 +172,17 @@ The report of comparison becomes the best checklist for me
 to improve the quality of software.
 
 ### Solution by Materialstore
+
+#### Terminology
+
+In this document I use a special term "**material**".
+A material is a file of which content is downloaded from a URL.
+A \*.png image file as screenshot of a web page rendered in browser
+is a typical material.
+An HTML source text of a web page can be a material as well.
+Anything downloaded from web can be a material
+--- \\\*.json, \*.xml,\\\*.txt, \*.csv, \\\*.js, \*.css, \\\*.xlsx, \\\*.pdf and so on.
+I would call these files managed by the materialstore library as "materials".
 
 #### Sample code
 
@@ -240,52 +251,44 @@ which performs the following:
 
         @BeforeAll
         public static void beforeAll() throws Exception {
-            // we use WebDriverManager to control ChromeDriver version
-            WebDriverManager.chromedriver().setup();
-
-            // create a directory to write output from this test class
+            WebDriverManager.chromedriver().setup();    
             Path projectDir = Paths.get(System.getProperty("user.dir"));
             outputDir = projectDir.resolve("build/tmp/testOutput")
                     .resolve(GoogleSearchTest.class.getName());
-            Files.createDirectories(outputDir);
-
-            // create the "store" directory where all of downloaded materials are stored
-            Path root = outputDir.resolve("store");
-
-            // create the Store instance
-            store = Stores.newInstance(root);
+            Files.createDirectories(outputDir);    
+            Path root = outputDir.resolve("store");    
+            store = Stores.newInstance(root);    
         }
 
         @BeforeEach
         public void beforeEach() {
-            // specify names of directories under the "store" directory
+            
             jobName = new JobName("GoogleSearch");
             jobTimestamp = JobTimestamp.now();
 
-            // open Chrome browser
-            driver = new ChromeDriver();
+            driver = new ChromeDriver(); 
         }
 
         @Test
         public void test_google_search() throws Exception {
             WebDriverWait wait = new WebDriverWait(driver, 10);
 
-            // open the Google Search page
+            
             URL entryURL = new URL("https://www.google.com");
             driver.navigate().to(entryURL);
 
-            // set a query string into the <input name="q"> element
+            
             By by_input_q = By.cssSelector("input[name=\"q\"]");
             wait.until(ExpectedConditions.visibilityOfElementLocated(by_input_q));
             WebElement we_input_q = driver.findElement(by_input_q);
             String qValue = "Shohei Ohtani";
             we_input_q.sendKeys(qValue);
 
-            // take a screenshot of the Google Search page,
+            
             TakesScreenshot scrShot = (TakesScreenshot) driver;
             File tempFile1 = scrShot.getScreenshotAs(OutputType.FILE);
 
-            // save the image into the store
+            
             Metadata metadata =
                     Metadata.builder(entryURL)
                             .put("step", "1")    // remember the step sequence
@@ -332,6 +335,26 @@ which performs the following:
         }
     }
 
+-   we use WebDriverManager to control ChromeDriver version
+
+-   create a directory to write outputs from this test class
+
+-   create the `store` directory where all of downloaded materials are stored
+
+-   prepare an instance of `com.kazurayam.materialstore.filesystem.Store` class which manages writing/reading materials
+
+-   specify the names of directories under the "store" directory
+
+-   open Chrome browser
+
+-   open the Google Search page
+
+-   set a query string into the &lt;input name="q"> element
+
+-   take a screenshot of the Google Search page
+
+-   save the image into the store
+
 When I ran the test, it creates a directory named `store` under the
 project’s directory where a tree of directories/files are created.
 
@@ -356,7 +379,30 @@ Its content is something like this:
     6dd1994bc0d92ba8e040cd38bc3d19c8af78dac6 png {"URL.host":"www.google.com", "URL.path":"", "URL.port":"80", "URL.protocol":"https", "q":"Shohei Ohtani", "step":"1"}
     b54640d1e106e07567413b5a712f8da824577612    png {"URL.host":"www.google.com", "URL.path":"/search", "URL.port":"80", "URL.protocol":"https", "URL.query":"q=Shohei+Ohtani&source=hp&ei=xHdZYuqMAbS32roPrJug8A4&iflsig=AHkkrS4AAAAAYlmF1GUo__T66C-cQAHefKOwYWAzgZva&ved=0ahUKEwjq_urdmpb3AhW0m1YBHawNCO4Q4dUDCAk&uact=5&oq=Shohei+Ohtani&gs_lcp=Cgdnd3Mtd2l6EAMyCwgAEIAEELEDEIMBMgsIABCABBCxAxCDATIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABFAAWCZg5QNoAHAAeACAAY0BiAHmA5IBAzEuM5gBAKABAQ&sclient=gws-wiz", "step":"2"}
 
-Please note that the `index` file contains the **Metadata**: the URL out of which
-screenshots are taken, and the fact that I made a query for "Shohei Ohtani" to Google.
+Points to note:
 
-The test generated a HTML
+1.  Physical files has a standard naming convention: 40 characters of hex-decimal string
+    followed by a dot ".", ends with a FileType extension such as `.png`.
+    The 40 characters (`ID` for short) are the SHA1 digital signature
+    derived from the content byte array of each file.
+
+2.  In the Materialstore world, you, programmer/tester, are no longer responsible for naming each physical files.
+
+3.  Each line in `index` file contains the **Metadata**: the URL out of which
+    screenshots are taken, and the fact that I made a query for "Shohei Ohtani" to Google.
+
+4.  What type of data can I put in the **Metadata**? --- quite flexible.
+    You can put any pair of Strings. The API supports a shortcut method to
+    add a URL into Metadata because URL is most frequently used as Metadata.
+
+5.  The **Metadata** of each line in `index` MUST be unique in a `index` file.
+    An attempt to write an object into the store with
+    duplicating **Metadata** with already stored object will be fail.
+    You, programmer/tester, are asked to assign descriptive enough
+    **Metadata** to each object.
+
+The test generated a HTML like this:
+
+-   [testOutput/com.kazurayam.materialstore.tutorial.ch1.GoogleSearchTest/store/GoogleSearch-list.html](testOutput/com.kazurayam.materialstore.tutorial.ch1.GoogleSearchTest/store/GoogleSearch-list.html)
+
+![GoogleSearch html](images/ch1/GoogleSearch-html.png)

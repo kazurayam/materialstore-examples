@@ -43,68 +43,86 @@ public class GoogleSearchTest {
 
     private static Path outputDir;
     private static Store store;
+
     private JobName jobName;
     private JobTimestamp jobTimestamp;
     private WebDriver driver;
 
     @BeforeAll
     public static void beforeAll() throws Exception {
+        WebDriverManager.chromedriver().setup();    // <1>
         Path projectDir = Paths.get(System.getProperty("user.dir"));
         outputDir = projectDir.resolve("build/tmp/testOutput")
                 .resolve(GoogleSearchTest.class.getName());
-        Files.createDirectories(outputDir);
-        WebDriverManager.chromedriver().setup();
-        Path root = outputDir.resolve("store");
-        store = Stores.newInstance(root);
+        Files.createDirectories(outputDir);    // <2>
+        Path root = outputDir.resolve("store");    // <3>
+        store = Stores.newInstance(root);    // <4>
     }
 
     @BeforeEach
     public void beforeEach() {
+        // <5>
         jobName = new JobName("GoogleSearch");
         jobTimestamp = JobTimestamp.now();
-        driver = new ChromeDriver();
+
+        driver = new ChromeDriver(); // <6>
     }
 
     @Test
     public void test_google_search() throws Exception {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        // open the Google Search page
+
+        // <7>
         URL entryURL = new URL("https://www.google.com");
         driver.navigate().to(entryURL);
-        // set a query into the <input name="q">
+
+        // <8>
         By by_input_q = By.cssSelector("input[name=\"q\"]");
         wait.until(ExpectedConditions.visibilityOfElementLocated(by_input_q));
         WebElement we_input_q = driver.findElement(by_input_q);
         String qValue = "Shohei Ohtani";
         we_input_q.sendKeys(qValue);
-        // take the screenshot of the Google Search page,
+
+        // <9>
         TakesScreenshot scrShot = (TakesScreenshot) driver;
-        File srcFile1 = scrShot.getScreenshotAs(OutputType.FILE);
-        // save the image into the store
+        File tempFile1 = scrShot.getScreenshotAs(OutputType.FILE);
+
+        // <10>
         Metadata metadata =
                 Metadata.builder(entryURL)
-                        .put("step", "1")
-                        .put("q", qValue)
+                        .put("step", "1")    // remember the step sequence
+                        .put("q", qValue)    // remember the query string
                         .build();
-        store.write(jobName, jobTimestamp, FileType.PNG, metadata, srcFile1);
-        // send ENTER to execute a search request
+        store.write(jobName, jobTimestamp, FileType.PNG, metadata, tempFile1);
+
+        // send ENTER to execute a search request;
+        // then browser transitions to the Search Result page
         we_input_q.sendKeys(Keys.chord(Keys.ENTER));
-        // wait for the search result page to load
+
+        // wait for the Search Result page to load completely
         By by_img_logo = By.xpath("//div[contains(@class,'logo')]/a/img");
         wait.until(ExpectedConditions.visibilityOfElementLocated(by_img_logo));
-        // take screenshot of the result page, store the image into the store
-        File srcFile2 = scrShot.getScreenshotAs(OutputType.FILE);
+
+        // take a screenshot of the Search Result page
+        File tempFile2 = scrShot.getScreenshotAs(OutputType.FILE);
+
         // save the image into the store
         URL resultPageURL = new URL(driver.getCurrentUrl());
-        Metadata metadata2 = Metadata.builder(resultPageURL).put("step", "2").build();
-        store.write(jobName, jobTimestamp, FileType.PNG, metadata2, srcFile2);
-        // get the MaterialList
+        Metadata metadata2 =
+                Metadata.builder(resultPageURL)
+                        .put("step", "2")   // this is the 2nd step
+                        .build();
+        store.write(jobName, jobTimestamp, FileType.PNG, metadata2, tempFile2);
+
+        // Now I want to compile a report in HTML
+        // get the list of files stored in the storage directory
         MaterialList materialList = store.select(jobName, jobTimestamp, QueryOnMetadata.ANY);
+
         // compile the report
         Inspector inspector = Inspector.newInstance(store);
         String fileName = jobName.toString() + "-list.html";
         Path report = inspector.report(materialList, fileName);
-        System.out.println("report found at " + report.toString());
+        System.out.println("The report will be found at " + report.toString());
     }
 
     @AfterEach

@@ -56,7 +56,7 @@ The code worked just fine.
 I wrote many Selenium tests that take bunches of screenshots.
 During the course, I found several problems in the code shown above.
 
-==== (1) I had to repeat writing code to create directories to store files
+==== Problem1 I had to repeat writing code to create directories to store files
 
 The Selenium library supports taking a screenshot of browser window
 and saving image into a temporary file.
@@ -74,7 +74,7 @@ The link:https://en.wikipedia.org/wiki/Don%27t_repeat_yourself[DRY] principle ca
 I wanted to invent a reusable library that manages a directory tree to
 store screenshots created by my Selenium tests.
 
-==== (2) Metadata of Web page disappeared
+==== Problem2 Metadata of Web page disappeared
 
 By executing the test, I got a file `./tmp/test.png`.
 In fact the file was created out of a web page at the URL `http://demo.guru99.com/V4/`.
@@ -88,14 +88,14 @@ was created out of the URL `http://demo.guru99.com/V4/`.
 Without the metadata, screenshots are not reusable for any purposes.
 Screenshots become garbage as soon as created.
 
-==== (3) I had to repeat writing code to view stored files
+==== Problem3 I had to repeat writing code to view stored files
 
 When I got many PNG files on disk,
 naturally I wanted a easy method to view images.
 I wrote a code to generate an HTML report of PNG files.
 I realised I should make the code as a reusable library.
 
-==== (4) I wanted to compare 2 sets of screenshots of a single Web app
+==== Problem4 I wanted to compare 2 sets of screenshots of a single Web app
 
 I developed a set of tests that take screenshots of web pages of
 a single web app with 100% coverage.
@@ -109,6 +109,17 @@ to improve the quality of software.
 
 === Solution by Materialstore
 
+==== Terminology
+
+In this document I use a special term "**material**".
+A material is a file of which content is downloaded from a URL.
+A \*.png image file as screenshot of a web page rendered in browser
+is a typical material.
+An HTML source text of a web page can be a material as well.
+Anything downloaded from web can be a material
+--- \*.json, \*.xml,\*.txt, \*.csv, \*.js, \*.css, \*.xlsx, \*.pdf and so on.
+I would call these files managed by the materialstore library as "materials".
+
 ==== Sample code
 
 The following code is a JUnit5-based test in Java,
@@ -119,10 +130,21 @@ which performs the following:
 3. and do SEND; wait for the respnse; take anothr screenshot and save it into the `store` directory
 4. compile a HTML report that renders the 2 PNG files with the metadata (URL etc)
 
+
 [source,java]
 ----
 include::../src/test/java/com/kazurayam/materialstore/tutorial/ch1/GoogleSearchTest.java[]
 ----
+<1> we use WebDriverManager to control ChromeDriver version
+<2> create a directory to write outputs from this test class
+<3> create the `store` directory where all of downloaded materials are stored
+<4> prepare an instance of `com.kazurayam.materialstore.filesystem.Store` class which manages writing/reading materials
+<5> specify the names of directories under the "store" directory
+<6> open Chrome browser
+<7> open the Google Search page
+<8> set a query string into the <input name="q"> element
+<9> take a screenshot of the Google Search page
+<10> save the image into the store
 
 When I ran the test, it creates a directory named `store` under the
 project's directory where a tree of directories/files are created.
@@ -152,7 +174,28 @@ Its content is something like this:
 include::testOutput/com.kazurayam.materialstore.tutorial.ch1.GoogleSearchTest/store/GoogleSearch/20220415_224848/index[]
 ----
 
-Please note that the `index` file contains the *Metadata*: the URL out of which
-screenshots are taken, and the fact that I made a query for "Shohei Ohtani" to Google.
+Points to note:
 
-The test generated a HTML
+1. Physical files has a standard naming convention: 40 characters of hex-decimal string
+followed by a dot ".", ends with a FileType extension such as `.png`.
+The 40 characters (`ID` for short) are the SHA1 digital signature
+derived from the content byte array of each file.
+2. In the Materialstore world, you, programmer/tester, are no longer responsible for naming each physical files.
+3. Each line in `index` file contains the *Metadata*: the URL out of which
+screenshots are taken, and the fact that I made a query for "Shohei Ohtani" to Google.
+4. What type of data can I put in the *Metadata*? --- quite flexible.
+You can put any pair of Strings. The API supports a shortcut method to
+add a URL into Metadata because URL is most frequently used as Metadata.
+5. The *Metadata* of each line in `index` MUST be unique in a `index` file.
+An attempt to write an object into the store with
+duplicating *Metadata* with already stored object will be fail.
+You, programmer/tester, are asked to assign descriptive enough
+*Metadata* to each object.
+
+The test generated a HTML like this:
+
+- link:testOutput/com.kazurayam.materialstore.tutorial.ch1.GoogleSearchTest/store/GoogleSearch-list.html[]
+
+image:images/ch1/GoogleSearch-html.png[]
+
+
