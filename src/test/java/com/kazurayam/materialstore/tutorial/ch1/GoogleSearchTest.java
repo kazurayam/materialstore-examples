@@ -42,9 +42,7 @@ import java.nio.file.Paths;
  */
 public class GoogleSearchTest {
 
-    private static Path outputDir;
     private static Store store;
-
     private JobName jobName;
     private JobTimestamp jobTimestamp;
     private WebDriver driver;
@@ -56,7 +54,7 @@ public class GoogleSearchTest {
 
         // create a directory where this test will write output files
         Path projectDir = Paths.get(System.getProperty("user.dir"));
-        outputDir = projectDir.resolve("build/tmp/testOutput")
+        Path outputDir = projectDir.resolve("build/tmp/testOutput")
                 .resolve(GoogleSearchTest.class.getName());
         Files.createDirectories(outputDir);
 
