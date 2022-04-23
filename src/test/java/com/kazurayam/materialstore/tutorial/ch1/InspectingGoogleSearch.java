@@ -22,6 +22,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -69,7 +70,9 @@ public class InspectingGoogleSearch {
     @BeforeEach
     public void beforeEach() {
         // open Chrome browser
-        driver = new ChromeDriver();
+        ChromeOptions opt = new ChromeOptions();
+        opt.addArguments("headless");
+        driver = new ChromeDriver(opt);
         // set the size of browser window
         Dimension dem = new Dimension(1024,768);
         driver.manage().window().setSize(dem);

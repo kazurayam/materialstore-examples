@@ -27,6 +27,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -66,15 +67,18 @@ public class InspectingMultipleURLs1 {
         store = Stores.newInstance(root);
 
         // find the file which contains a list of target URL
-        targetCSV = projectDir.resolve(
-                "src/test/resources/fixture/www.police.pref.kanagawa.jp.csv");
+        targetCSV =
+                projectDir.resolve("src/test/resources/fixture")
+                        .resolve("weather.csv");
         assert Files.exists(targetCSV);
     }
 
     @BeforeEach
     public void beforeEach() {
         // open Chrome browser
-        driver = new ChromeDriver();
+        ChromeOptions opt = new ChromeOptions();
+        opt.addArguments("headless");
+        driver = new ChromeDriver(opt);
         // set the size of browser window
         Dimension dem = new Dimension(1024,768);
         driver.manage().window().setSize(dem);
