@@ -1,9 +1,8 @@
-package com.kazurayam.materialstore.tutorial.ch1;
+package com.kazurayam.materialstore.tutorial.ch2;
 
 import com.kazurayam.materialstore.Inspector;
 import com.kazurayam.materialstore.MaterialstoreException;
 import com.kazurayam.materialstore.filesystem.JobName;
-import com.kazurayam.materialstore.filesystem.JobTimestamp;
 import com.kazurayam.materialstore.filesystem.MaterialList;
 import com.kazurayam.materialstore.filesystem.Store;
 import com.kazurayam.materialstore.filesystem.Stores;
@@ -29,9 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  *
  */
-public class VisualInspectionTwinsModeTest extends VisualInspectionBase {
+public class VisualInspectionTwinsMode extends VisualInspectionBase {
 
-    private static Logger logger = LoggerFactory.getLogger(VisualInspectionTwinsModeTest.class);
+    private static Logger logger = LoggerFactory.getLogger(VisualInspectionTwinsMode.class);
 
     @BeforeAll
     public static void beforeAll() throws Exception {
@@ -40,7 +39,7 @@ public class VisualInspectionTwinsModeTest extends VisualInspectionBase {
         // create a directory where this test will write output files
         Path projectDir = Paths.get(System.getProperty("user.dir"));
         Path outputDir = projectDir.resolve("build/tmp/testOutput")
-                .resolve(VisualInspectionTwinsModeTest.class.getName());
+                .resolve(VisualInspectionTwinsMode.class.getName());
         Files.createDirectories(outputDir);
         // create a directory "store"
         Path root = outputDir.resolve("store");

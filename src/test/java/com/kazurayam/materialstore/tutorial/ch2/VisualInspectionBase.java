@@ -1,4 +1,4 @@
-package com.kazurayam.materialstore.tutorial.ch1;
+package com.kazurayam.materialstore.tutorial.ch2;
 
 import com.kazurayam.materialstore.Inspector;
 import com.kazurayam.materialstore.MaterialstoreException;

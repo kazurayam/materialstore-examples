@@ -40,7 +40,7 @@ import java.nio.file.Paths;
  * 5. download HTML source of the web pages pages
  * 6. store the PNG and HTML files into the materialstore
  */
-public class GoogleSearchTest {
+public class InspectingGoogleSearch {
 
     private static Store store;
     private JobName jobName;
@@ -55,7 +55,7 @@ public class GoogleSearchTest {
         // create a directory where this test will write output files
         Path projectDir = Paths.get(System.getProperty("user.dir"));
         Path outputDir = projectDir.resolve("build/tmp/testOutput")
-                .resolve(GoogleSearchTest.class.getName());
+                .resolve(InspectingGoogleSearch.class.getName());
         Files.createDirectories(outputDir);
 
         // create a directory "store"
@@ -68,10 +68,6 @@ public class GoogleSearchTest {
 
     @BeforeEach
     public void beforeEach() {
-        // specify names of sub-directories
-        jobName = new JobName("GoogleSearch");
-        jobTimestamp = JobTimestamp.now();
-
         // open Chrome browser
         driver = new ChromeDriver();
         // set the size of browser window
@@ -80,16 +76,20 @@ public class GoogleSearchTest {
     }
 
     @Test
-    public void test_google_search() throws Exception {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+    public void test_google_search_using_basic_materialstore_api() throws Exception {
+        // specify names of sub-directories
+        jobName = new JobName("test_google_search_using_basic_materialstore_api");
+        jobTimestamp = JobTimestamp.now();
 
         // let Chrome navigate to the Google Search page
         URL searchPage = new URL("https://www.google.com");
         driver.navigate().to(searchPage);
 
-        // type a query string into the <input type="text" name="q"> field
         By by_input_q = By.cssSelector("input[name=\"q\"]");
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(by_input_q));
+
+        // type a query string into the <input type="text" name="q"> field
         WebElement we_input_q = driver.findElement(by_input_q);
         String qValue = "Shohei Ohtani";
         we_input_q.sendKeys(qValue);
@@ -124,6 +124,7 @@ public class GoogleSearchTest {
                         .put("step", "2")   // this is the 2nd step
                         .build();
         store.write(jobName, jobTimestamp, FileType.PNG, metadata2, tempFile2);
+
 
         // Now I want to compile a report in HTML.
         // get the list of all materials stored in the "store/<jobName>/<jobTimestamp>" directory
