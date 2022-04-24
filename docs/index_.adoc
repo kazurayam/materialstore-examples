@@ -379,14 +379,39 @@ The Java8 Functional Interfaces enforces my code well-organized.
 See the full source of `com.kazurayam.materialstore.tutorial.ch3.InspectingMultipleURLs1` class:
 
 The import statements, `@BeforeAll`-annotated method, `@BeforeEach`-annotated method and
-`@AfterEach`-annotated methods --- those are similiar to the
+`@AfterEach`-annotated methods --- those are similar to the previous code
+link:https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch2/InspectingGoogleSearch.java[InspectingGoogleSearch].
+
+So, let me focus to the `@Test`-annotated method.
 
 [source,java]
 ----
-include::../src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs1.java[]
+include::../src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs1.java[lines=84..130]
 ----
 
+The `@Test`-annotated method does the following processing:
 
+1. read a CSV file to get a list `Target` objects to process.
+link:https://github.com/kazurayam/materialstore/blob/main/src/main/java/com/kazurayam/materialstore/materialize/TargetCSVReader.java[TargetCSVReader] helps.
+TargetCSVReader can read a CSV text from `java.lang.String`, `java.io.File`, `java.nio.file.Path` and
+`java.io.Reader`.
+2. link:https://github.com/kazurayam/materialstore/blob/main/src/main/java/com/kazurayam/materialstore/materialize/Target.java[Target] class encapsulates a URL to process.
+Additionally a `Target` object holds a Selenium's `By` object and a Map<String, String> as adhoc metadata.
+A line in a CSV text makes an instance of `Target`.
+3. create a JobName instance and a JobTimestamp; effectively
+specify the output directory path to store screenshots.
+4. create an instance of `MaterializingPageFunction<Target, WebDriver, StorageDirectory, Material>` named `capture`.
+link:https://github.com/kazurayam/materialstore/blob/main/src/main/java/com/kazurayam/materialstore/materialize/MaterializingWebResourceFunction.java[com.kazurayam.materialstore.materialize.MaterializingPageFunction] is
+defined in the materialstore library. It defines a signature of a function
+that processes a web page being displayed in browser and output something
+in the `store` directory; for example take a screenshot and save it.
+Of course, I designed the signature of `MaterializingPageFunction`.
+I tried to make it as useful for many cases as possible.
+5. `@Test`-annotated method iterates over the `List<Target>`, while
+navigating browser to the target URL and calling the `capture` function.
+The `capture` takes the screenshot and store the image into the store.
+6. `@Test`-annotated method compiles a HTML report, which contains screenshots of
+all the URLs listed in the CSV file.
 
 
 

@@ -39,6 +39,7 @@ import java.util.List;
 
 public class InspectingMultipleURLs1 {
 
+    private static Path projectDir;
     private static Store store;
     private JobName jobName;
     private JobTimestamp jobTimestamp;
@@ -51,7 +52,7 @@ public class InspectingMultipleURLs1 {
         WebDriverManager.chromedriver().setup();
 
         // create a directory where this test will write output files
-        Path projectDir = Paths.get(System.getProperty("user.dir"));
+        projectDir = Paths.get(System.getProperty("user.dir"));
         Path outputDir = projectDir.resolve("build/tmp/testOutput")
                 .resolve(InspectingMultipleURLs1.class.getName());
         if (Files.exists(outputDir)) {
@@ -65,12 +66,6 @@ public class InspectingMultipleURLs1 {
         // prepare an instance of com.kazurayam.materialstore.filesystem.Store
         // which will control every writing/reading files within the store
         store = Stores.newInstance(root);
-
-        // find the file which contains a list of target URL
-        targetCSV =
-                projectDir.resolve("src/test/resources/fixture")
-                        .resolve("weather.csv");
-        assert Files.exists(targetCSV);
     }
 
     @BeforeEach
@@ -88,6 +83,11 @@ public class InspectingMultipleURLs1 {
 
     @Test
     public void test_multiple_URLs_using_Functional_Interface() throws Exception {
+        // find the file which contains a list of target URL
+        targetCSV =
+                projectDir.resolve("src/test/resources/fixture")
+                        .resolve("weather.csv");
+        assert Files.exists(targetCSV);
         // specify names of sub-directories
         jobName = new JobName("test_multiple_URLs_using_Functional_Interface");
         jobTimestamp = JobTimestamp.now();

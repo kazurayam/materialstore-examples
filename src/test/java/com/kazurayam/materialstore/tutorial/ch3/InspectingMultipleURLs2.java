@@ -32,6 +32,7 @@ import static com.kazurayam.materialstore.materialize.MaterializingPageFunctions
 
 public class InspectingMultipleURLs2 {
 
+    private static Path projectDir;
     private static Store store;
     private JobName jobName;
     private JobTimestamp jobTimestamp;
@@ -44,7 +45,7 @@ public class InspectingMultipleURLs2 {
         WebDriverManager.chromedriver().setup();
 
         // create a directory where this test will write output files
-        Path projectDir = Paths.get(System.getProperty("user.dir"));
+        projectDir = Paths.get(System.getProperty("user.dir"));
         Path outputDir = projectDir.resolve("build/tmp/testOutput")
                 .resolve(InspectingMultipleURLs2.class.getName());
         if (Files.exists(outputDir)) {

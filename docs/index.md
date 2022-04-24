@@ -286,6 +286,7 @@ It performs the following processing:
      */
     public class InspectingGoogleSearch {
 
+        private static Path projectDir;
         private static Store store;
         private JobName jobName;
         private JobTimestamp jobTimestamp;
@@ -297,7 +298,7 @@ It performs the following processing:
             WebDriverManager.chromedriver().setup();
 
             // create a directory where this test will write output files
-            Path projectDir = Paths.get(System.getProperty("user.dir"));
+            projectDir = Paths.get(System.getProperty("user.dir"));
             Path outputDir = projectDir.resolve("build/tmp/testOutput")
                     .resolve(InspectingGoogleSearch.class.getName());
             Files.createDirectories(outputDir);
@@ -650,98 +651,18 @@ The Java8 Functional Interfaces enforces my code well-organized.
 See the full source of `com.kazurayam.materialstore.tutorial.ch3.InspectingMultipleURLs1` class:
 
 The import statements, `@BeforeAll`-annotated method, `@BeforeEach`-annotated method and
-`@AfterEach`-annotated methods --- those are similiar to the
+`@AfterEach`-annotated methods --- those are similar to the previous code
+[InspectingGoogleSearch](https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch2/InspectingGoogleSearch.java).
 
-    package com.kazurayam.materialstore.tutorial.ch3;
+So, let me focus to the `@Test`-annotated method.
 
-    import com.kazurayam.materialstore.Inspector;
-    import com.kazurayam.materialstore.filesystem.FileType;
-    import com.kazurayam.materialstore.filesystem.JobName;
-    import com.kazurayam.materialstore.filesystem.JobTimestamp;
-    import com.kazurayam.materialstore.filesystem.Material;
-    import com.kazurayam.materialstore.filesystem.MaterialList;
-    import com.kazurayam.materialstore.filesystem.Metadata;
-    import com.kazurayam.materialstore.filesystem.QueryOnMetadata;
-    import com.kazurayam.materialstore.filesystem.Store;
-    import com.kazurayam.materialstore.filesystem.Stores;
-
-    import com.kazurayam.materialstore.materialize.MaterializingPageFunction;
-    import com.kazurayam.materialstore.materialize.StorageDirectory;
-    import com.kazurayam.materialstore.materialize.Target;
-    import com.kazurayam.materialstore.materialize.TargetCSVReader;
-    import io.github.bonigarcia.wdm.WebDriverManager;
-    import org.apache.commons.io.FileUtils;
-    import org.junit.jupiter.api.AfterEach;
-    import org.junit.jupiter.api.BeforeAll;
-    import org.junit.jupiter.api.BeforeEach;
-    import org.junit.jupiter.api.Test;
-    import org.openqa.selenium.Dimension;
-    import org.openqa.selenium.OutputType;
-    import org.openqa.selenium.TakesScreenshot;
-    import org.openqa.selenium.WebDriver;
-    import org.openqa.selenium.WebElement;
-    import org.openqa.selenium.chrome.ChromeDriver;
-    import org.openqa.selenium.chrome.ChromeOptions;
-    import org.openqa.selenium.support.ui.ExpectedConditions;
-    import org.openqa.selenium.support.ui.WebDriverWait;
-
-    import java.io.File;
-    import java.nio.file.Files;
-    import java.nio.file.Path;
-    import java.nio.file.Paths;
-    import java.util.List;
-
-    public class InspectingMultipleURLs1 {
-
-        private static Store store;
-        private JobName jobName;
-        private JobTimestamp jobTimestamp;
-        private WebDriver driver;
-        private static Path targetCSV;
-
-        @BeforeAll
-        public static void beforeAll() throws Exception {
-            // we use WebDriverManager to control the version of ChromeDriver
-            WebDriverManager.chromedriver().setup();
-
-            // create a directory where this test will write output files
-            Path projectDir = Paths.get(System.getProperty("user.dir"));
-            Path outputDir = projectDir.resolve("build/tmp/testOutput")
-                    .resolve(InspectingMultipleURLs1.class.getName());
-            if (Files.exists(outputDir)) {
-                FileUtils.deleteDirectory(outputDir.toFile());
-            }
-            Files.createDirectories(outputDir);
-
-            // create a directory "store"
-            Path root = outputDir.resolve("store");
-
-            // prepare an instance of com.kazurayam.materialstore.filesystem.Store
-            // which will control every writing/reading files within the store
-            store = Stores.newInstance(root);
-
+        @Test
+        public void test_multiple_URLs_using_Functional_Interface() throws Exception {
             // find the file which contains a list of target URL
             targetCSV =
                     projectDir.resolve("src/test/resources/fixture")
                             .resolve("weather.csv");
             assert Files.exists(targetCSV);
-        }
-
-        @BeforeEach
-        public void beforeEach() {
-            // open Chrome browser
-            ChromeOptions opt = new ChromeOptions();
-            opt.addArguments("headless");
-            driver = new ChromeDriver(opt);
-            // set the size of browser window
-            Dimension dem = new Dimension(1024,768);
-            driver.manage().window().setSize(dem);
-        }
-
-
-
-        @Test
-        public void test_multiple_URLs_using_Functional_Interface() throws Exception {
             // specify names of sub-directories
             jobName = new JobName("test_multiple_URLs_using_Functional_Interface");
             jobTimestamp = JobTimestamp.now();
@@ -783,13 +704,31 @@ The import statements, `@BeforeAll`-annotated method, `@BeforeEach`-annotated me
             System.out.println("The report will be found at " + report.toString());
         }
 
+The `@Test`-annotated method does the following processing:
 
+1.  read a CSV file to get a list `Target` objects to process.
+    [TargetCSVReader](https://github.com/kazurayam/materialstore/blob/main/src/main/java/com/kazurayam/materialstore/materialize/TargetCSVReader.java) helps.
+    TargetCSVReader can read a CSV text from `java.lang.String`, `java.io.File`, `java.nio.file.Path` and
+    `java.io.Reader`.
 
-        @AfterEach
-        public void afterEach() {
-            if (driver != null) {
-                driver.quit();
-                driver = null;
-            }
-        }
-    }
+2.  [Target](https://github.com/kazurayam/materialstore/blob/main/src/main/java/com/kazurayam/materialstore/materialize/Target.java) class encapsulates a URL to process.
+    Additionally a `Target` object holds a Selenium’s `By` object and a Map&lt;String, String> as adhoc metadata.
+    A line in a CSV text makes an instance of `Target`.
+
+3.  create a JobName instance and a JobTimestamp; effectively
+    specify the output directory path to store screenshots.
+
+4.  create an instance of `MaterializingPageFunction<Target, WebDriver, StorageDirectory, Material>` named `capture`.
+    [com.kazurayam.materialstore.materialize.MaterializingPageFunction](https://github.com/kazurayam/materialstore/blob/main/src/main/java/com/kazurayam/materialstore/materialize/MaterializingWebResourceFunction.java) is
+    defined in the materialstore library. It defines a signature of a function
+    that processes a web page being displayed in browser and output something
+    in the `store` directory; for example take a screenshot and save it.
+    Of course, I designed the signature of `MaterializingPageFunction`.
+    I tried to make it as useful for many cases as possible.
+
+5.  `@Test`-annotated method iterates over the `List<Target>`, while
+    navigating browser to the target URL and calling the `capture` function.
+    The `capture` takes the screenshot and store the image into the store.
+
+6.  `@Test`-annotated method compiles a HTML report, which contains screenshots of
+    all the URLs listed in the CSV file.
