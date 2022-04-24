@@ -10,6 +10,8 @@ author: kazurayam, #1 April 2022
 
 - link:https://mvnrepository.com/artifact/com.kazurayam/materialstore[Maven Central URL]
 
+- link:https://github.com/kazurayam/materialstore-tutorial[materialstore-tutorial on GitHub]
+
 === API documents
 
 - link:https://kazurayam.github.io/materialstore/api/[materialstore Javadoc]
@@ -316,6 +318,14 @@ link:https://kazurayam.github.io/materialstore/api/com/kazurayam/materialstore/f
 Any program can call `store.select()` to get a Material instance with
 full Metadata carried over. It can utilize the file (screenshot png, etc)
 with Metadata associated.
+13. The lines in the `index` file are sorted by the ascending order of
+Metadata in JSON String representation.
+In the JSON String representation of Metadata,
+the key-value pairs are sorted primarily by the ascending order of the "key" string,
+and secondarily by the ascending order of the "value" string.
+14. The lines in the `index` file are NOT sorted by the physical file name (`ID`).
+It may look curious at a first glance.
+
 
 The *Problem2 (Metadata)* is resolved by the `index` file and associated
 Materialstore API.
@@ -374,9 +384,9 @@ I will show you one more sample code. The following code employs
 link:https://www.baeldung.com/java-8-functional-interfaces[Java8 Functional Interfaces].
 The Java8 Functional Interfaces enforces my code well-organized.
 
-=== Custom implementation of the `MaterializingPageFunction` interface
+=== developing Custom implementation of the `MaterializingPageFunction` interface
 
-See the full source of `com.kazurayam.materialstore.tutorial.ch3.InspectingMultipleURLs1` class:
+Please find the full source of link:https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs1.java[InspectingMultipleURLs1] class.
 
 The import statements, `@BeforeAll`-annotated method, `@BeforeEach`-annotated method and
 `@AfterEach`-annotated methods --- those are similar to the previous code
@@ -417,3 +427,34 @@ all the URLs listed in the CSV file.
 
 
 
+
+=== using a built-in implementation of the `MaterializingPageFunction` interface
+
+Please find the full source of link:https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs2.java[InspectingMultipleURLs2] class.
+
+The import statements, `@BeforeAll`-annotated method, `@BeforeEach`-annotated method and
+`@AfterEach`-annotated methods --- those are similar to the previous code
+link:https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch2/InspectingGoogleSearch.java[InspectingGoogleSearch].
+
+So, let me focus to the `@Test`-annotated method.
+
+[source,java]
+----
+include::../src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs2.java[lines=84..111]
+----
+
+`InspectingMultipleURLs2` is far shorter than `InspectingMultipleURLs1`.
+
+Why? It's because `InspectingMultipleURLs2` uses the built-in `storeEntirePageScreenshot.accept()` function
+to take screenshot.
+And also it uses `storeHTMLSource.accept()` function to store the page's HTML source.
+See the source:
+
+- link:https://github.com/kazurayam/materialstore/blob/main/src/main/java/com/kazurayam/materialstore/materialize/MaterializingPageFunctions.java[MaterializingPageFunctions]
+
+The built-in function `storeEntirePageScreenshot.accept()` internally
+uses the link:https://github.com/pazone/ashot[AShot] library to take
+the screenshot of entire page (vertically long image).
+
+The built-in function `storeHTMLSource.accept()` internally
+uses link:https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/WebDriver.html#getPageSource()[WebDriver#getPageSource()] method.
