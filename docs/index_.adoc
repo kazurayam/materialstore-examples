@@ -141,7 +141,7 @@ This project requires several external jar files. See
 
 to find how to setup the environment.
 
-=== Sample 2-1: Materializing Google Search
+=== Sample: Materializing Google Search
 
 The following code is a JUnit5-based test written in Java.
 It performs the following processing:
@@ -384,7 +384,7 @@ I will show you one more sample code. The following code employs
 link:https://www.baeldung.com/java-8-functional-interfaces[Java8 Functional Interfaces].
 The Java8 Functional Interfaces enforces my code well-organized.
 
-=== developing Custom implementation of the `MaterializingPageFunction` interface
+=== Sample: MaterializingPageFunction interface
 
 Please find the full source of link:https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs1.java[InspectingMultipleURLs1] class.
 
@@ -428,7 +428,7 @@ all the URLs listed in the CSV file.
 
 
 
-=== using a built-in implementation of the `MaterializingPageFunction` interface
+=== Sample: using a built-in implementation of the `MaterializingPageFunction` interface
 
 Please find the full source of link:https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs2.java[InspectingMultipleURLs2] class.
 

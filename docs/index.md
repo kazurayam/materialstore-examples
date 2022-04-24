@@ -12,7 +12,7 @@
     -   [Chapter2 "Materializing" screenshot and other resources](#chapter2-materializing-screenshot-and-other-resources)
         -   [Special term "Material"](#special-term-material)
         -   [External dependencies](#external-dependencies)
-        -   [Sample 2-1: Materializing Google Search](#sample-2-1-materializing-google-search)
+        -   [Sample: Materializing Google Search](#sample-materializing-google-search)
             -   [@BeforeAll](#beforeall)
             -   [@BeforeEach](#beforeeach)
             -   [@AfterEach](#aftereach)
@@ -21,8 +21,8 @@
         -   [index file with Metadata](#index-file-with-metadata)
         -   [Report generated](#report-generated)
     -   [Chapter3 Processing a set of multiple URLs](#chapter3-processing-a-set-of-multiple-urls)
-        -   [developing Custom implementation of the `MaterializingPageFunction` interface](#developing-custom-implementation-of-the-materializingpagefunction-interface)
-        -   [using a built-in implementation of the `MaterializingPageFunction` interface](#using-a-built-in-implementation-of-the-materializingpagefunction-interface)
+        -   [Sample: MaterializingPageFunction interface](#sample-materializingpagefunction-interface)
+        -   [Sample: using a built-in implementation of the `MaterializingPageFunction` interface](#sample-using-a-built-in-implementation-of-the-materializingpagefunction-interface)
 
 # materialstore tutorial
 
@@ -223,7 +223,7 @@ This project requires several external jar files. See
 
 to find how to setup the environment.
 
-### Sample 2-1: Materializing Google Search
+### Sample: Materializing Google Search
 
 The following code is a JUnit5-based test written in Java.
 It performs the following processing:
@@ -658,7 +658,7 @@ I will show you one more sample code. The following code employs
 [Java8 Functional Interfaces](https://www.baeldung.com/java-8-functional-interfaces).
 The Java8 Functional Interfaces enforces my code well-organized.
 
-### developing Custom implementation of the `MaterializingPageFunction` interface
+### Sample: MaterializingPageFunction interface
 
 Please find the full source of [InspectingMultipleURLs1](https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs1.java) class.
 
@@ -745,7 +745,7 @@ The `@Test`-annotated method does the following processing:
 6.  `@Test`-annotated method compiles a HTML report, which contains screenshots of
     all the URLs listed in the CSV file.
 
-### using a built-in implementation of the `MaterializingPageFunction` interface
+### Sample: using a built-in implementation of the `MaterializingPageFunction` interface
 
 Please find the full source of [InspectingMultipleURLs2](https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs2.java) class.
 
