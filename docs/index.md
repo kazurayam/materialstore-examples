@@ -9,7 +9,7 @@
             -   [Problem2: Metadata of Web pages disappeared](#problem2-metadata-of-web-pages-disappeared)
             -   [Problem3: I shouldn’t repeat writing code for reporting](#problem3-i-shouldnt-repeat-writing-code-for-reporting)
             -   [Problem4: I want to perform Visual Inspection](#problem4-i-want-to-perform-visual-inspection)
-    -   [Chapter2 "Materializing" screenshot and other resources](#chapter2-materializing-screenshot-and-other-resources)
+    -   [Chapter2 "Materializing" screenshots](#chapter2-materializing-screenshots)
         -   [Special term "Material"](#special-term-material)
         -   [External dependencies](#external-dependencies)
         -   [Sample: Materializing Google Search](#sample-materializing-google-search)
@@ -200,10 +200,11 @@ CSS sources, JavaScript sources, as well.
 
 Visual Inspection requires the problem 1, 2 and 3 to be resolved.
 
-## Chapter2 "Materializing" screenshot and other resources
+## Chapter2 "Materializing" screenshots
 
 I will describe how the Materialstore library solves the problem1, 2 and 3.
 I will describe the solution to the problem 4 later in another section.
+This demonstration project runs on Java and [Gradle](https://gradle.org/).
 
 ### Special term "Material"
 
@@ -225,12 +226,12 @@ to find how to setup the environment.
 
 ### Sample: Materializing Google Search
 
-The following code is a JUnit5-based test written in Java.
+The [following code](https://github.com/kazurayam/materialstore-tutorial/blob/master/src/test/java/com/kazurayam/materialstore/tutorial/ch2/InspectingGoogleSearch.java) is a JUnit5-based test written in Java.
 It performs the following processing:
 
 1.  it `https://www.google.com`
 
-2.  in the `<input type="text" name="q">` field, type a query string
+2.  in the `<input type="text" name="q">` field, type a query string "Shohei Ohtani".
 
 3.  take a screenshot and save the PNG image into the `store` directory.
 
@@ -556,19 +557,20 @@ Points to note :
     The Materialstore library let you assign any FileType to a material.
     The Materialstore library does not check if the FileType is appropriate to the actual content of the file.
 
-8.  Each line in `index` file contains the `<Metadata>` part.
-    For example, the URL out of which screenshots are taken, and the fact that I made a query for "Shohei Ohtani" to Google.
+8.  Each line in `index` file contains the `<Metadata>` part. It is in JSON Object format.
 
 9.  What type of data can I put in the `<Metadata>` ? --- quite flexible.
+    For example, the URL out of which screenshots are taken, and the fact that I made a query for "Shohei Ohtani" to Google.
     You can put any pair of Strings. The API supports a shortcut method to
     add a URL into Metadata because URL is most frequently used as Metadata.
 
-10. The combination of `<FileType>` and `<Metadata>` of each line in `index`
+10. The combination of `<FileType>` and `<Metadata>` of each line
     **MUST be unique** in a `index` file.
     An attempt to write an object into the store with
-    duplicating `<FileType> + <Metadata>` with already stored object will be fail.
-    You (programmer, tester) are supposed to assign a descriptive enough
-    Metadata to each object.
+    a `<FileType> + <Metadata>` value duplicating with already stored object
+    will be fail.
+    You (programmer, tester) are supposed to assign a descriptive enough and
+    identifiable enough Metadata to each object.
 
 11. The `com.kazurayam.materialstore.filesystem.Store` interface declares
     `write` methods to store files into the store,
