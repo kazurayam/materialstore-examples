@@ -1,4 +1,4 @@
-package com.kazurayam.materialstore.tutorial.ch1;
+package com.kazurayam.materialstore.tutorial.ch3;
 
 import com.kazurayam.materialstore.Inspector;
 import com.kazurayam.materialstore.filesystem.JobName;
@@ -78,6 +78,7 @@ public class InspectingMultipleURLs2 {
     }
 
 
+
     @Test
     public void test_multiple_URLs_using_builtin_functions() throws Exception {
         // specify names of sub-directories
@@ -106,6 +107,9 @@ public class InspectingMultipleURLs2 {
         System.out.println("The report will be found at " + report.toString());
     }
 
+
+
+    
     @AfterEach
     public void afterEach() {
         if (driver != null) {

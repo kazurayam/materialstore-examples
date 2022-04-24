@@ -1,4 +1,4 @@
-package com.kazurayam.materialstore.tutorial.ch2;
+package com.kazurayam.materialstore.tutorial.ch4;
 
 import com.kazurayam.materialstore.Inspector;
 import com.kazurayam.materialstore.MaterialstoreException;
@@ -21,25 +21,24 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.function.BiFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
  */
-public class VisualInspectionTwinsMode extends VisualInspectionBase {
+public class VisualInspectionChronosMode extends VisualInspectionBase {
 
-    private static Logger logger = LoggerFactory.getLogger(VisualInspectionTwinsMode.class);
+    private static Logger logger = LoggerFactory.getLogger(VisualInspectionChronosMode.class);
 
     @BeforeAll
     public static void beforeAll() throws Exception {
-        // we use WebDriverManager to control the version of ChromeDriver
+        // we use WebDriverManager to control the version of ChromDriver
         WebDriverManager.chromedriver().setup();
         // create a directory where this test will write output files
         Path projectDir = Paths.get(System.getProperty("user.dir"));
         Path outputDir = projectDir.resolve("build/tmp/testOutput")
-                .resolve(VisualInspectionTwinsMode.class.getName());
+                .resolve(VisualInspectionChronosMode.class.getName());
         Files.createDirectories(outputDir);
         // create a directory "store"
         Path root = outputDir.resolve("store");
@@ -47,7 +46,7 @@ public class VisualInspectionTwinsMode extends VisualInspectionBase {
         // which will control every writing/reading files withing the store
         store = Stores.newInstance(root);
         // specify names of sub-directories
-        jobName = new JobName("MyAdminTwins");
+        jobName = new JobName("MyAdminChronos");
     }
 
     @BeforeEach
@@ -59,47 +58,33 @@ public class VisualInspectionTwinsMode extends VisualInspectionBase {
     }
 
     @Test
-    public void test_twins() throws Exception {
-        String leftText = "http://myadmin.kazurayam.com,//img[@alt=\"umineko\"]";
-        MaterialList leftMaterialList = materialize(leftText, store, jobName);
+    public void test_chronos() throws Exception {
         String rightText = "http://devadmin.kazurayam.com,//img[@alt=\"umineko\"]";
-        MaterialList rightMaterialList = materialize(rightText, store, jobName);
+        MaterialList currentMaterialList = materialize(rightText, store, jobName);
         //
-        MProductGroup reduced = reduceTwins(store, leftMaterialList, rightMaterialList);
+        MProductGroup reduced = reduceChronos(store, currentMaterialList);
         //
         int warnings = report(store, reduced, 1.0D);
         assertEquals(0, warnings, "warnings=" + warnings);
     }
 
-
     /**
      *
      */
-    MProductGroup reduceTwins(Store store,
-                         MaterialList left,
-                         MaterialList right) throws MaterialstoreException {
+    MProductGroup reduceChronos(Store store,
+                         MaterialList currentMaterialList)
+            throws MaterialstoreException {
         logger.info("[reduce] store=" + store);
-        logger.info("[reduce] left=" + left);
-        logger.info("[reduce] right=" + right);
-        assert left.size() > 0;
-        assert right.size() > 0;
+        logger.info("[reduce] currentMaterialList=" + currentMaterialList);
+        assert currentMaterialList.size() > 0;
 
-        BiFunction<MaterialList, MaterialList, MProductGroup> func =
-                (MaterialList leftML, MaterialList rightML) ->
-                        MProductGroup.builder(leftML, rightML)
-                                .ignoreKeys("URL.host", "URL.port", "URL.scheme")
-                                .sort("step")
-                                .build();
         MProductGroup prepared =
-                MProductGroupBuilder.twins(store,
-                        left, right, func);
+                MProductGroupBuilder.chronos(store, currentMaterialList);
 
         Inspector inspector = Inspector.newInstance(store);
         MProductGroup reduced = inspector.reduce(prepared);
         return reduced;
     }
-
-
 
     @AfterEach
     public void afterEach() {
