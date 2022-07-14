@@ -15,21 +15,20 @@ import com.kazurayam.materialstore.materialize.MaterializingPageFunction;
 import com.kazurayam.materialstore.materialize.StorageDirectory;
 import com.kazurayam.materialstore.materialize.Target;
 import com.kazurayam.materialstore.materialize.TargetCSVReader;
+import com.kazurayam.materialstore.tutorial.TestHelper;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -39,12 +38,10 @@ import java.util.List;
 
 public class InspectingMultipleURLs1 {
 
+    private final Logger logger = LoggerFactory.getLogger(InspectingMultipleURLs1.class);
     private static Path projectDir;
     private static Store store;
-    private JobName jobName;
-    private JobTimestamp jobTimestamp;
     private WebDriver driver;
-    private static Path targetCSV;
 
     @BeforeAll
     public static void beforeAll() throws Exception {
@@ -53,12 +50,8 @@ public class InspectingMultipleURLs1 {
 
         // create a directory where this test will write output files
         projectDir = Paths.get(System.getProperty("user.dir"));
-        Path outputDir = projectDir.resolve("build/tmp/testOutput")
-                .resolve(InspectingMultipleURLs1.class.getName());
-        if (Files.exists(outputDir)) {
-            FileUtils.deleteDirectory(outputDir.toFile());
-        }
-        Files.createDirectories(outputDir);
+        Path outputDir = TestHelper.initializeOutputDir(projectDir,
+                InspectingMultipleURLs1.class);
 
         // create a directory "store"
         Path root = outputDir.resolve("store");
@@ -70,13 +63,7 @@ public class InspectingMultipleURLs1 {
 
     @BeforeEach
     public void beforeEach() {
-        // open Chrome browser
-        ChromeOptions opt = new ChromeOptions();
-        opt.addArguments("headless");
-        driver = new ChromeDriver(opt);
-        // set the size of browser window
-        Dimension dem = new Dimension(1024,768);
-        driver.manage().window().setSize(dem);
+        driver = TestHelper.openHeadlessChrome();
     }
 
 
@@ -84,13 +71,13 @@ public class InspectingMultipleURLs1 {
     @Test
     public void test_multiple_URLs_using_Functional_Interface() throws Exception {
         // find the file which contains a list of target URL
-        targetCSV =
+        Path targetCSV =
                 projectDir.resolve("src/test/resources/fixture")
                         .resolve("weather.csv");
         assert Files.exists(targetCSV);
         // specify names of sub-directories
-        jobName = new JobName("test_multiple_URLs_using_Functional_Interface");
-        jobTimestamp = JobTimestamp.now();
+        JobName jobName = new JobName("test_multiple_URLs_using_Functional_Interface");
+        JobTimestamp jobTimestamp = JobTimestamp.now();
         StorageDirectory storageDirectory = new StorageDirectory(store, jobName, jobTimestamp);
 
         // create a function to process the target
@@ -107,13 +94,15 @@ public class InspectingMultipleURLs1 {
                     File tempFile = shooter.getScreenshotAs(OutputType.FILE);
                     // copy the image into the store
                     Metadata metadata = Metadata.builder(target.getUrl()).build();
-                    return store.write(jobName, jobTimestamp, FileType.PNG, metadata, tempFile);
+                    return store.write(sd.getJobName(), sd.getJobTimestamp(),
+                            FileType.PNG, metadata, tempFile);
                 };
 
         // materialize the target URLs
         List<Target> targetList = TargetCSVReader.parse(targetCSV);
         int x = 1;
         for (Target t : targetList) {
+            logger.info("processing " + t.getUrl());
             Target target = t.copyWith("seq", Integer.toString(x++));
             driver.navigate().to(target.getUrl());
             // call the function defined above
@@ -133,9 +122,6 @@ public class InspectingMultipleURLs1 {
 
     @AfterEach
     public void afterEach() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
-        }
+        TestHelper.closeBrowser(driver);
     }
 }

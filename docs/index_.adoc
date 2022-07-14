@@ -23,10 +23,15 @@ author: kazurayam, #1 April 2022
 
 === Background
 
-Several years ago when I worked for an IT company, I endeavored to develop
+Several years ago when I worked for an company, I endeavored to develop
 automated UI tests for their Web applications.
+The company I worked for was not very skillful.
+They were not ready to carry out advanced End-to-End testings.
+All they could do was to collect as many screenshots as possible manually.
+I suppose there still are many organizations like them.
 
-I studied Selenium WebDriver in Java. I studied the following article to learn how to take screenshots of web pages.
+I studied Selenium WebDriver in Java.
+I studied the following article to learn how to take screenshots of web pages.
 
 - https://www.guru99.com/take-screenshot-selenium-webdriver.html[Guru99, How to Take Screenshot in Selenium WebDriver]
 
@@ -87,8 +92,8 @@ was created out of the URL `http://demo.guru99.com/V4/`
 and more.
 Once the image file produced, later some program may read the `test.png` file
 to reuse somehow, but the program will never be informed of the metadata.
-With no metadata informed, screenshots are not reusable for any purposes.
-`test.png` file becomes a garbage as soon as created.
+**With no metadata informed, screenshots are not reusable for any purposes.**
+The `test.png` file becomes a garbage as soon as created.
 
 ==== Problem3: I shouldn't repeat writing code for reporting
 
@@ -240,7 +245,8 @@ $ tree ./build/tmp/testOutput
 
 The output directory tree has the following structure.
 
-1. Under a root directory, subdirectories and files are created. The directory is named as `store` as convention.
+1. We will have a root directory named as `store` as convention.
+Under the `store`, the materialstore lib output all subdirectories and files.
 2. Under the `store` directory there will be one or more _JobName_ directories.
 You can give any name to the _JobName_ directories, for example `test_google_search_using_basic_materialstore_api`.
 3. Under a _JobName_ directory there will be one or more _JobTimestamp_ directories.
@@ -397,7 +403,7 @@ So, let me focus to the `@Test`-annotated method.
 
 [source,java]
 ----
-include::../src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs1.java[lines=84..130]
+include::../src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs1.java[lines=70..120]
 ----
 
 The `@Test`-annotated method does the following processing:
@@ -444,7 +450,7 @@ So, let me focus to the `@Test`-annotated method.
 
 [source,java]
 ----
-include::../src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs2.java[lines=84..111]
+include::../src/test/java/com/kazurayam/materialstore/tutorial/ch3/InspectingMultipleURLs2.java[lines=64..96]
 ----
 
 The `InspectingMultipleURLs2` uses the built-in `storeEntirePageScreenshot.accept()` function
@@ -471,10 +477,10 @@ I think that these will be compact enough, acceptably maintainable.
 
 
 
-== Visual Inspection --- Twins Mode
+== Chapter4 Visual Inspection, Twins Mode
 
 
-== Visual Inspection --- Chronos Mode
+== Chapter5 Visual Inspection, Chronos Mode
 
 
 

@@ -8,12 +8,14 @@ import com.kazurayam.materialstore.filesystem.Store;
 import com.kazurayam.materialstore.filesystem.Stores;
 import com.kazurayam.materialstore.reduce.MProductGroup;
 import com.kazurayam.materialstore.reduce.MProductGroupBuilder;
+import com.kazurayam.materialstore.tutorial.TestHelper;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class VisualInspectionChronosMode extends VisualInspectionBase {
 
     private static Logger logger = LoggerFactory.getLogger(VisualInspectionChronosMode.class);
+
+    private static Store store;
+    private static JobName jobName;
+    private WebDriver driver;
 
     @BeforeAll
     public static void beforeAll() throws Exception {
@@ -60,7 +66,7 @@ public class VisualInspectionChronosMode extends VisualInspectionBase {
     @Test
     public void test_chronos() throws Exception {
         String rightText = "http://devadmin.kazurayam.com,//img[@alt=\"umineko\"]";
-        MaterialList currentMaterialList = materialize(rightText, store, jobName);
+        MaterialList currentMaterialList = materialize(rightText, driver, store, jobName);
         //
         MProductGroup reduced = reduceChronos(store, currentMaterialList);
         //
@@ -88,10 +94,7 @@ public class VisualInspectionChronosMode extends VisualInspectionBase {
 
     @AfterEach
     public void afterEach() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
-        }
+        TestHelper.closeBrowser(driver);
     }
 
 }

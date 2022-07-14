@@ -22,21 +22,21 @@ public abstract class VisualInspectionBase {
 
     private static Logger logger = LoggerFactory.getLogger(VisualInspectionBase.class);
 
-    protected static Store store;
-    protected static JobName jobName;
-
-    protected WebDriver driver;
+    //protected static Store store;
+    //protected static JobName jobName;
+    //protected WebDriver driver;
 
     /**
      *
      */
-    protected MaterialList materialize(String csvText, Store store, JobName jobName)
+    protected MaterialList materialize(String csvText, WebDriver driver, Store store, JobName jobName)
             throws MaterialstoreException {
         List<Target> targetList = TargetCSVReader.parse(csvText);
         JobTimestamp jobTimestamp = JobTimestamp.now();
         StorageDirectory storageDirectory =
                 new StorageDirectory(store, jobName, jobTimestamp);
         for (Target target : targetList) {
+            driver.navigate().to(target.getUrl());
             MaterializingPageFunctions.storeEntirePageScreenshot
                     .accept(target, driver, storageDirectory);
             MaterializingPageFunctions.storeHTMLSource

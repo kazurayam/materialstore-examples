@@ -8,12 +8,14 @@ import com.kazurayam.materialstore.filesystem.Store;
 import com.kazurayam.materialstore.filesystem.Stores;
 import com.kazurayam.materialstore.reduce.MProductGroup;
 import com.kazurayam.materialstore.reduce.MProductGroupBuilder;
+import com.kazurayam.materialstore.tutorial.TestHelper;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,15 +34,18 @@ public class VisualInspectionTwinsMode extends VisualInspectionBase {
 
     private static Logger logger = LoggerFactory.getLogger(VisualInspectionTwinsMode.class);
 
+    private static Store store;
+    private static JobName jobName;
+    private WebDriver driver;
+
     @BeforeAll
     public static void beforeAll() throws Exception {
         // we use WebDriverManager to control the version of ChromeDriver
         WebDriverManager.chromedriver().setup();
         // create a directory where this test will write output files
         Path projectDir = Paths.get(System.getProperty("user.dir"));
-        Path outputDir = projectDir.resolve("build/tmp/testOutput")
-                .resolve(VisualInspectionTwinsMode.class.getName());
-        Files.createDirectories(outputDir);
+        Path outputDir = TestHelper.initializeOutputDir(projectDir,
+                VisualInspectionTwinsMode.class);
         // create a directory "store"
         Path root = outputDir.resolve("store");
         // prepare an instance of com.kazurayam.materialstore.filesystem.Store
@@ -53,21 +58,20 @@ public class VisualInspectionTwinsMode extends VisualInspectionBase {
     @BeforeEach
     public void beforeEach() {
         // open Chrome browser
-        driver = new ChromeDriver();
-        // set the size of browser window
-        driver.manage().window().setSize(new Dimension(1024, 768));
+        driver = TestHelper.openHeadlessChrome();
     }
 
     @Test
     public void test_twins() throws Exception {
         String leftText = "http://myadmin.kazurayam.com,//img[@alt=\"umineko\"]";
-        MaterialList leftMaterialList = materialize(leftText, store, jobName);
+        MaterialList leftMaterialList = materialize(leftText, driver, store, jobName);
+        //
         String rightText = "http://devadmin.kazurayam.com,//img[@alt=\"umineko\"]";
-        MaterialList rightMaterialList = materialize(rightText, store, jobName);
+        MaterialList rightMaterialList = super.materialize(rightText, driver, store, jobName);
         //
         MProductGroup reduced = reduceTwins(store, leftMaterialList, rightMaterialList);
         //
-        int warnings = report(store, reduced, 1.0D);
+        int warnings = super.report(store, reduced, 1.0D);
         assertEquals(0, warnings, "warnings=" + warnings);
     }
 
@@ -95,18 +99,14 @@ public class VisualInspectionTwinsMode extends VisualInspectionBase {
                         left, right, func);
 
         Inspector inspector = Inspector.newInstance(store);
-        MProductGroup reduced = inspector.reduce(prepared);
-        return reduced;
+        return inspector.reduce(prepared); // return a "reduced" MProductGroup
     }
 
 
 
     @AfterEach
     public void afterEach() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
-        }
+        TestHelper.closeBrowser(driver);
     }
 
 }
